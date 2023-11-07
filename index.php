@@ -126,7 +126,11 @@ if (isset($_SESSION['logged']) != "true") {
 				</li>
 
 				<li class="has-children bookmarks">
-					<a href="index.php?view_all_vendor">View All Vendors</a>
+					<a href="#0">Vendors</a>
+					<ul>
+						<li><a href="index.php?view_all_vendor">View All Vendors</a></li>
+						<li><a href="index.php?add_vendor">Add Vendor</a></li>
+					</ul>
 				</li>
 
 				<li class="has-children bookmarks">

@@ -176,6 +176,9 @@ if (isset($_SESSION['logged']) != "true") {
 			if (isset($_GET['view_all_vendor'])) {
 				include("view_all_vendor.php");
 			}
+			if (isset($_GET['add_vendor'])) {
+				include("add_vendor.php");
+			}
 			if (isset($_GET['add_review'])) {
 				include("add_review.php");
 			}

@@ -1,5 +1,7 @@
 <?php
+include('config.php');
 if (isset($_SESSION['logged']) != true) {
+    echo "Not logged in";
     header("Location: login.php");
     die();
 }
@@ -31,7 +33,6 @@ if (isset($_SESSION['logged']) != true) {
         </fieldset>
     </form>
 </div>
-
 <?php
 
 if (isset($_POST['add_vendor'])) {
@@ -39,13 +40,18 @@ if (isset($_POST['add_vendor'])) {
     $vendor_email = mysqli_real_escape_string($conn, $_POST['vendor_email']);
     $vendor_contact = mysqli_real_escape_string($conn, $_POST['vendor_contact']);
 
-    $insert_vendor = "INSERT INTO vendor (contact_name, email, phone_no) VALUES ('$vendor_name', '$vendor_email', '$vendor_contact')";
+    // Use prepared statements to prevent SQL injection
+    $insert_vendor = "INSERT INTO vendor (contact_name, email, phone_no) VALUES (?, ?, ?)";
+    $stmt = mysqli_prepare($conn, $insert_vendor);
+    mysqli_stmt_bind_param($stmt, "sss", $vendor_name, $vendor_email, $vendor_contact);
 
-    if (mysqli_query($conn, $insert_vendor)) {
-        echo "Vendor added successfully!";
+    if (mysqli_stmt_execute($stmt)) {
+        echo "<script>alert('New Vendor added successfully!')</script>";
+        echo"<script>window.open('index.php?add_vendor','_self')</script>";
     } else {
         echo "Error: " . mysqli_error($conn);
     }
+    mysqli_stmt_close($stmt);
 }
 
 ?>

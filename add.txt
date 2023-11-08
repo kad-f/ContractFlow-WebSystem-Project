@@ -1,0 +1,40 @@
+CREATE TABLE permission_roles (
+    permission_id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT
+);
+
+-- Insert permission roles
+INSERT INTO permission_roles (name, description)
+VALUES
+    ('user_management_access', 'Access to user management'),
+    ('permission_create', 'Create permissions'),
+    ('permission_edit', 'Edit permissions'),
+    ('permission_show', 'View permissions'),
+    ('permission_delete', 'Delete permissions'),
+    ('permission_access', 'Access to permission management'),
+    ('role_create', 'Create roles'),
+    ('role_edit', 'Edit roles'),
+    ('role_show', 'View roles'),
+    ('role_delete', 'Delete roles'),
+    ('role_access', 'Access to role management'),
+    ('user_create', 'Create users'),
+    ('user_edit', 'Edit users'),
+    ('user_show', 'View users'),
+    ('user_delete', 'Delete users'),
+    ('user_access', 'Access to user management'),
+    ('contract_create', 'Create contracts'),
+    ('contract_edit', 'Edit contracts'),
+    ('contract_show', 'View contracts'),
+    ('contract_delete', 'Delete contracts'),
+    ('contract_access', 'Access to contract management'),
+    ('profile_password_edit', 'Edit user profile and password');
+
+
+-- Insert additional permission roles
+INSERT INTO permission_roles (name, description)
+VALUES
+    ('can_add_notice_period', 'Add notice period to contracts'),
+    ('can_add_review', 'Add reviews to contracts'),
+    ('can_settle_issues', 'Settle issues with contracts'),
+    ('can_create_invoice', 'Create invoices for contracts');

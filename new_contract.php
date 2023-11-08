@@ -122,7 +122,7 @@ include('update_notifications.php');
                     <input type="text" id="vendor_contact" name="vendor_contact"
                         placeholder="Enter Vendor Contact number">
                 </li>
-            </ul>
+            </ul> 
         </fieldset>
         <fieldset>
             <legend>Service Delivery Manager</legend>

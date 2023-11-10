@@ -74,6 +74,7 @@ if (!$category_id) {
 <body>
     <div class="contract-card">
         <h2>Contract Details</h2>
+        <br>
         <?php
         $sql = "SELECT * FROM contract WHERE category_id = '$category_id'";
         $result = $conn->query($sql);
@@ -90,10 +91,58 @@ if (!$category_id) {
                     <?php echo $row['type_id']; ?>
                 </div>
                 <div class="contract-field">
-                    <strong>Type ID:</strong>
-                    <?php echo $row['type_id']; ?>
+                    <strong>Category ID:</strong>
+                    <?php echo $row['category_id']; ?>
                 </div>
-                <!-- Repeat the structure for other contract fields -->
+                <div class="contract-field">
+                    <strong>Description:</strong>
+                    <?php echo $row['description']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>Date of Agreement:</strong>
+                    <?php echo $row['date_of_agreement']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>Supplier Name:</strong>
+                    <?php echo $row['supplier_name']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>Life of Contract:</strong>
+                    <?php echo $row['life_of_contract']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>Vendor ID:</strong>
+                    <?php echo $row['vendor_id']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>SDM ID:</strong>
+                    <?php echo $row['sdm_id']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>SDM Remarks:</strong>
+                    <?php echo $row['sdm_remarks']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>Annual Spend:</strong>
+                    <?php echo $row['annual_spend']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>Payment Type:</strong>
+                    <?php echo $row['payment_type']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>Payment Terms:</strong>
+                    <?php echo $row['payment_terms']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>Status:</strong>
+                    <?php echo $row['status']; ?>
+                </div>
+                <div class="contract-field">
+                    <strong>Expiration ID:</strong>
+                    <?php echo $row['expiration_id']; ?>
+                </div>
+                <!-- Add other contract fields here as needed -->
 
                 <?php
             }

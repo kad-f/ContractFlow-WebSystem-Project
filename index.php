@@ -1,5 +1,5 @@
 <?php
-include('config.php');
+include('./database/config.php');
 include('update_notifications.php');
 session_start();
 if (isset($_SESSION['logged']) != "true") {

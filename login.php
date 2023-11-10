@@ -1,6 +1,6 @@
 <?php
 session_start();
-include("config.php");
+include("./database/config.php");
 
 if (isset($_SESSION['logged']) != "") {
 	header("Location: index.php");

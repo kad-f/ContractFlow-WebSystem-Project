@@ -11,10 +11,13 @@ if (isset($_POST['login'])) {
 	$password = mysqli_real_escape_string($conn, $_POST['password']);
 	$select = "SELECT * FROM users WHERE email='$email'";
 	$result = mysqli_query($conn, $select);
+
 	if ($result) {
 		$row = mysqli_fetch_array($result);
 		if ($row['password'] == $password) {
 			$_SESSION['logged'] = "true";
+			$_SESSION['id'] = $row['id'];
+			$_SESSION['role_id'] = $row['role_id']; // Add this line to set the role_id in the session
 			header("Location: index.php");
 		} else {
 			echo "<script>alert('Incorrect Password. Please try again.');</script>";
@@ -24,7 +27,7 @@ if (isset($_POST['login'])) {
 	}
 }
 ?>
-<!Doctype HTML>
+<!DOCTYPE HTML>
 <html>
 
 <head>
@@ -46,7 +49,6 @@ if (isset($_POST['login'])) {
 				<button class="btn btn-lg btn-primary btn-block" name="login" value="login" type="Submit">Login</button>
 			</form>
 		</div>
-	</div>
 	</div>
 </body>
 

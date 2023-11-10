@@ -7,7 +7,7 @@ if (isset($_SESSION['logged']) != "true") {
 	die();
 }
 
-
+$roleID = $_SESSION['role_id'];
 
 ?>
 <!DOCTYPE html>
@@ -64,12 +64,16 @@ if (isset($_SESSION['logged']) != "true") {
 			<ul>
 				<li class="cd-label">Main</li>
 				<li class="has-children overview">
-					<a href="#0">Manage Contracts</a>
-					<ul>
-						<li><a href="index.php?new_contract">Add New Contract</a></li>
-						<li><a href="#0">Edit Contract</a></li>
-						<li><a href="#0">Contract Categories</a></li>
-					</ul>
+					<?php if ($roleID == 1 || $roleID == 3): ?>
+						<a href="#0">Manage Contracts</a>
+						<ul>
+
+							<li><a href="index.php?new_contract">Add New Contract</a></li>
+							<li><a href="#0">Edit Contract</a></li>
+							<li><a href="#0">Contract Categories</a></li>
+
+						</ul>
+					<?php endif; ?>
 				</li>
 				<li class="has-children notifications active">
 					<a href="index.php?view_all_notifications">Notifications<span class="count">
@@ -120,16 +124,25 @@ if (isset($_SESSION['logged']) != "true") {
 					<a href="#0">Notice Periods</a>
 
 					<ul>
-						<li><a href="index.php?add_notice_period">Add Notice Period</a></li>
-						<li><a href="index.php?view_all_notices">View All</a></li>
+						<?php if ($roleID == 1 || $roleID == 3): ?>
+							<li><a href="index.php?add_notice_period">Add Notice Period</a></li>
+						<?php endif; ?>
+						<?php if ($roleID == 2): ?>
+							<li><a href="index.php?view_all_notices">View All</a></li>
+						<?php endif; ?>
 					</ul>
 				</li>
 
 				<li class="has-children bookmarks">
 					<a href="#0">Vendors</a>
 					<ul>
-						<li><a href="index.php?view_all_vendor">View All Vendors</a></li>
-						<li><a href="index.php?add_vendor">Add Vendor</a></li>
+						<?php if ($roleID == 1 || $roleID == 3): ?>
+							<li><a href="index.php?view_all_vendor">View All Vendors</a></li>
+							<li><a href="index.php?add_vendor">Add Vendor</a></li>
+						<?php endif; ?>
+						<?php if ($roleID == 2): ?>
+							<li><a href="index.php?view_all_vendor">View All Vendors</a></li>
+						<?php endif; ?>
 					</ul>
 				</li>
 
@@ -144,16 +157,19 @@ if (isset($_SESSION['logged']) != "true") {
 
 			<ul>
 				<li class="cd-label">Invoice Management</li>
-				<li class="has-children bookmarks">
-					<a href="index.php?attach_invoice">Attach an Invoice</a>
-				</li>
-				<li class="has-children images">
-					<a href="#0">Invoice Details</a>
-				</li>
-
-				<li class="has-children users">
-					<a href="#0">Generate Report</a>
-				</li>
+				<?php if ($roleID == 1 || $roleID == 3): ?>
+					<li class="has-children bookmarks">
+						<a href="index.php?attach_invoice">Attach an Invoice</a>
+					</li>
+				<?php endif; ?>
+				<?php if ($roleID == 2): ?>
+					<li class="has-children images">
+						<a href="#0">Invoice Details</a>
+					</li>
+					<li class="has-children users">
+						<a href="#0">Generate Report</a>
+					</li>
+				<?php endif; ?>
 			</ul>
 
 			<ul>

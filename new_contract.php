@@ -198,7 +198,7 @@ if (isset($_POST['create_contract'])) {
     $supplier = mysqli_real_escape_string($conn, $_POST['supplier']);
     $payment_type = mysqli_real_escape_string($conn, $_POST['payment_type']);
     $spend = mysqli_real_escape_string($conn, $_POST['spend']);
-    $terms = mysqli_real_escape_string($conn, $_POST['terms']);
+    $terms = mysqli_real_escape_string($conn, $_POST['payment_terms']);
     $status = mysqli_real_escape_string($conn, $_POST['status']);
     $vendor_name = mysqli_real_escape_string($conn, $_POST['vendor_name']);
     $vendor_email = mysqli_real_escape_string($conn, $_POST['vendor_email']);
@@ -226,7 +226,7 @@ if (isset($_POST['create_contract'])) {
     mysqli_query($conn, $insert_expiration);
     $expiration_id = mysqli_insert_id($conn);
 
-    $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, sdm_remarks, annual_spend, payment_type, status, expiration_id) VALUES('$reference_num', '$contract_type', '$category', '$description', '$date', '$supplier', '$life', '$vendor_id', '$sdm_id', '$remarks', '$spend', '$payment_type', '$status', '$expiration_id')";
+    $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, sdm_remarks, annual_spend, payment_type, payment_terms, status, expiration_id) VALUES('$reference_num', '$contract_type', '$category', '$description', '$date', '$supplier', '$life', '$vendor_id', '$sdm_id', '$remarks', '$spend', '$payment_type', '$terms', '$status', '$expiration_id')";
     $result_contract = mysqli_query($conn, $insert_contract);
 
     if ($result_contract) {

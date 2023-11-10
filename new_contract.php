@@ -122,7 +122,7 @@ include('update_notifications.php');
                     <input type="text" id="vendor_contact" name="vendor_contact"
                         placeholder="Enter Vendor Contact number">
                 </li>
-            </ul> 
+            </ul>
         </fieldset>
         <fieldset>
             <legend>Service Delivery Manager</legend>
@@ -226,7 +226,7 @@ if (isset($_POST['create_contract'])) {
     mysqli_query($conn, $insert_expiration);
     $expiration_id = mysqli_insert_id($conn);
 
-    $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, language_id, supplier_name, country_id, life_of_contract, vendor_id, sdm_id, sdm_remarks, currency_id, annual_spend, payment_type, status, expiration_id) VALUES('$reference_num', '$contract_type', '$category', '$description', '$date', '$language', '$supplier', '$country', '$life', '$vendor_id', '$sdm_id', '$remarks', '$currency', '$spend', '$payment_type', '$status', '$expiration_id')";
+    $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, sdm_remarks, annual_spend, payment_type, status, expiration_id) VALUES('$reference_num', '$contract_type', '$category', '$description', '$date', '$language', '$supplier', '$country', '$life', '$vendor_id', '$sdm_id', '$remarks', '$currency', '$spend', '$payment_type', '$status', '$expiration_id')";
     $result_contract = mysqli_query($conn, $insert_contract);
 
     if ($result_contract) {

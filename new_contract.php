@@ -23,12 +23,12 @@ include('update_notifications.php');
                     <p>Type</p>
                     <ul class="form-flex-inner">
                         <li>
-                            <input type="radio" id="software" name="contract_type" value="software" checked="checked">
-                            <label for="software">Software</label>
-                        </li>
-                        <li>
                             <input type="radio" id="hardware" name="contract_type" value="hardware">
                             <label for="hardware">Hardware</label>
+                        </li>
+                        <li>
+                            <input type="radio" id="software" name="contract_type" value="software" checked="checked">
+                            <label for="software">Software</label>
                         </li>
                         <li>
                             <input type="radio" id="license" name="contract_type" value="license">

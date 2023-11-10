@@ -76,8 +76,20 @@ if (!$category_id) {
         <h2>Contract Details</h2>
         <br>
         <?php
-        $sql = "SELECT * FROM contract WHERE category_id = '$category_id'";
+        $sql = "SELECT * FROM contract 
+        LEFT JOIN type ON contract.type_id = type.type_id
+        LEFT JOIN category ON contract.category_id = category.category_id
+        LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
+        LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
+        LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
+        WHERE contract.category_id = '$category_id'";
+
+
         $result = $conn->query($sql);
+
+        if ($result === false) {
+            die("Error in SQL query: " . $conn->error);
+        }
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
@@ -87,12 +99,12 @@ if (!$category_id) {
                     <?php echo $row['contract_no']; ?>
                 </div>
                 <div class="contract-field">
-                    <strong>Type ID:</strong>
-                    <?php echo $row['type_id']; ?>
+                    <strong>Type:</strong>
+                    <?php echo $row['type']; ?>
                 </div>
                 <div class="contract-field">
-                    <strong>Category ID:</strong>
-                    <?php echo $row['category_id']; ?>
+                    <strong>Category:</strong>
+                    <?php echo $row['category']; ?>
                 </div>
                 <div class="contract-field">
                     <strong>Description:</strong>
@@ -104,19 +116,15 @@ if (!$category_id) {
                 </div>
                 <div class="contract-field">
                     <strong>Supplier Name:</strong>
-                    <?php echo $row['supplier_name']; ?>
+                    <?php echo $row['contact_name']; ?>
                 </div>
                 <div class="contract-field">
                     <strong>Life of Contract:</strong>
                     <?php echo $row['life_of_contract']; ?>
                 </div>
                 <div class="contract-field">
-                    <strong>Vendor ID:</strong>
-                    <?php echo $row['vendor_id']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>SDM ID:</strong>
-                    <?php echo $row['sdm_id']; ?>
+                    <strong>SDM:</strong>
+                    <?php echo $row['name']; ?>
                 </div>
                 <div class="contract-field">
                     <strong>SDM Remarks:</strong>
@@ -139,8 +147,8 @@ if (!$category_id) {
                     <?php echo $row['status']; ?>
                 </div>
                 <div class="contract-field">
-                    <strong>Expiration ID:</strong>
-                    <?php echo $row['expiration_id']; ?>
+                    <strong>Expiration Date:</strong>
+                    <?php echo $row['date']; ?>
                 </div>
                 <!-- Add other contract fields here as needed -->
 

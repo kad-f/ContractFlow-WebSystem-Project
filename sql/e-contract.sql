@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 10, 2023 at 06:50 AM
+-- Generation Time: Nov 11, 2023 at 01:01 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.0.28
 
@@ -32,6 +32,15 @@ CREATE TABLE `category` (
   `category` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`category_id`, `category`) VALUES
+(1, 'Hardware and Software Services'),
+(2, 'Network and Security Services'),
+(3, 'IT Support and Maintenance');
+
 -- --------------------------------------------------------
 
 --
@@ -56,16 +65,12 @@ CREATE TABLE `contract` (
   `expiration_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
--- --------------------------------------------------------
-
 --
--- Table structure for table `currency`
+-- Dumping data for table `contract`
 --
 
-CREATE TABLE `currency` (
-  `currency_id` int(2) NOT NULL,
-  `currency` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+INSERT INTO `contract` (`contract_no`, `type_id`, `category_id`, `description`, `date_of_agreement`, `supplier_name`, `life_of_contract`, `vendor_id`, `sdm_id`, `sdm_remarks`, `annual_spend`, `payment_type`, `payment_terms`, `status`, `expiration_id`) VALUES
+('654F6A81413C', 0, 1, 'Computer', '2023-11-23', 'Supplier', 99.99, 14, 10, 'THIS IS A REMARKS', 2000, '4', '', 'Complete', 9);
 
 -- --------------------------------------------------------
 
@@ -89,7 +94,14 @@ CREATE TABLE `expiration` (
 --
 
 INSERT INTO `expiration` (`expiration_id`, `contract_no`, `date`, `status_days`, `renewal_provision_id`, `termination_rights`, `assignment_provision`, `notified`) VALUES
-(2, '123', '2023-11-30', 0, 0, 'qwe', 'qwe', 1);
+(2, '123', '2023-11-30', 0, 0, 'qwe', 'qwe', 1),
+(3, '123', '2023-11-30', 0, 0, 'qwe', 'qwe', 1),
+(4, '123', '2023-11-30', 0, 0, 'qwe', 'qwe', 1),
+(5, '', '2023-11-30', 0, 0, 'quwheuqhwoeihq', 'kqwnekqnwlek', 1),
+(6, '1', '2023-11-30', 0, 0, 'qweqwe', 'kqwnekqnwlek', 1),
+(7, '654EDF4CDC2C', '2023-11-30', 0, 0, 'qweqwe', 'qweqwe', 1),
+(8, '654EDF4CDC2C', '2023-11-30', 0, 0, 'qweqwe', 'qweqwe', 1),
+(9, '654F6A81413C', '2023-11-30', 0, 0, 'QWERTY', 'QWERTY', 1);
 
 -- --------------------------------------------------------
 
@@ -119,17 +131,6 @@ CREATE TABLE `issues` (
   `description` text NOT NULL,
   `issuer_name` varchar(255) NOT NULL,
   `issuer_role` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `language`
---
-
-CREATE TABLE `language` (
-  `language_id` int(2) NOT NULL,
-  `language` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 -- --------------------------------------------------------
@@ -255,15 +256,16 @@ CREATE TABLE `service_delivery_manager` (
   `sdm_id` int(12) NOT NULL,
   `name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `phone_no` varchar(13) NOT NULL
+  `phone_no` varchar(13) NOT NULL,
+  `role_id` int(11) NOT NULL DEFAULT 3
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `service_delivery_manager`
 --
 
-INSERT INTO `service_delivery_manager` (`sdm_id`, `name`, `email`, `phone_no`) VALUES
-(3, 'qwe', 'qwe@gmail.com', '123');
+INSERT INTO `service_delivery_manager` (`sdm_id`, `name`, `email`, `phone_no`, `role_id`) VALUES
+(10, 'TEST SDM', 'sdm@gmail.com', '09262408442', 3);
 
 -- --------------------------------------------------------
 
@@ -275,6 +277,16 @@ CREATE TABLE `type` (
   `type_id` int(2) NOT NULL,
   `type` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `type`
+--
+
+INSERT INTO `type` (`type_id`, `type`) VALUES
+(0, 'hardware'),
+(1, 'software'),
+(2, 'license'),
+(3, 'other');
 
 -- --------------------------------------------------------
 
@@ -315,7 +327,7 @@ CREATE TABLE `user_role` (
 
 INSERT INTO `user_role` (`role_id`, `name`) VALUES
 (1, 'admin'),
-(2, 'client'),
+(2, 'vendor'),
 (3, 'service_delivery_manager');
 
 -- --------------------------------------------------------
@@ -328,15 +340,40 @@ CREATE TABLE `vendor` (
   `vendor_id` int(12) NOT NULL,
   `contact_name` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `phone_no` varchar(13) NOT NULL
+  `phone_no` varchar(13) NOT NULL,
+  `role_id` int(11) NOT NULL DEFAULT 2
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `vendor`
 --
 
-INSERT INTO `vendor` (`vendor_id`, `contact_name`, `email`, `phone_no`) VALUES
-(6, 'TEST', 'test@gmail.com', '09262408442');
+INSERT INTO `vendor` (`vendor_id`, `contact_name`, `email`, `phone_no`, `role_id`) VALUES
+(13, 'TEST', 'test@gmail.com', '09262408442', 2),
+(14, 'TEST VENDOR', 'vendor@gmail.com', '09262408442', 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `view_all_users`
+--
+
+CREATE TABLE `view_all_users` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `email` varchar(255) DEFAULT NULL,
+  `contact_phone` varchar(20) DEFAULT NULL,
+  `role_id` int(11) DEFAULT NULL,
+  `type` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `view_all_users`
+--
+
+INSERT INTO `view_all_users` (`id`, `name`, `email`, `contact_phone`, `role_id`, `type`) VALUES
+(1, 'TEST VENDOR', 'vendor@gmail.com', '09262408442', 2, 'vendor'),
+(2, 'TEST SDM', 'sdm@gmail.com', '09262408442', 3, 'sdm');
 
 --
 -- Indexes for dumped tables
@@ -352,13 +389,8 @@ ALTER TABLE `category`
 -- Indexes for table `contract`
 --
 ALTER TABLE `contract`
-  ADD UNIQUE KEY `contract_no` (`contract_no`);
-
---
--- Indexes for table `currency`
---
-ALTER TABLE `currency`
-  ADD PRIMARY KEY (`currency_id`);
+  ADD UNIQUE KEY `contract_no` (`contract_no`),
+  ADD KEY `fk_contract_type` (`type_id`);
 
 --
 -- Indexes for table `expiration`
@@ -377,12 +409,6 @@ ALTER TABLE `invoice`
 --
 ALTER TABLE `issues`
   ADD PRIMARY KEY (`id`);
-
---
--- Indexes for table `language`
---
-ALTER TABLE `language`
-  ADD PRIMARY KEY (`language_id`);
 
 --
 -- Indexes for table `notification`
@@ -412,7 +438,8 @@ ALTER TABLE `renewal_provision`
 -- Indexes for table `service_delivery_manager`
 --
 ALTER TABLE `service_delivery_manager`
-  ADD PRIMARY KEY (`sdm_id`);
+  ADD PRIMARY KEY (`sdm_id`),
+  ADD KEY `fk_sdm_role_id` (`role_id`);
 
 --
 -- Indexes for table `type`
@@ -438,7 +465,14 @@ ALTER TABLE `user_role`
 --
 ALTER TABLE `vendor`
   ADD PRIMARY KEY (`vendor_id`),
-  ADD UNIQUE KEY `vendor` (`vendor_id`);
+  ADD UNIQUE KEY `vendor` (`vendor_id`),
+  ADD KEY `fk_vendor_role_id` (`role_id`);
+
+--
+-- Indexes for table `view_all_users`
+--
+ALTER TABLE `view_all_users`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -448,31 +482,19 @@ ALTER TABLE `vendor`
 -- AUTO_INCREMENT for table `category`
 --
 ALTER TABLE `category`
-  MODIFY `category_id` int(2) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `currency`
---
-ALTER TABLE `currency`
-  MODIFY `currency_id` int(2) NOT NULL AUTO_INCREMENT;
+  MODIFY `category_id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `expiration`
 --
 ALTER TABLE `expiration`
-  MODIFY `expiration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `expiration_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `issues`
 --
 ALTER TABLE `issues`
   MODIFY `id` int(12) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `language`
---
-ALTER TABLE `language`
-  MODIFY `language_id` int(2) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `payment_type`
@@ -496,13 +518,13 @@ ALTER TABLE `renewal_provision`
 -- AUTO_INCREMENT for table `service_delivery_manager`
 --
 ALTER TABLE `service_delivery_manager`
-  MODIFY `sdm_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `sdm_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `type`
 --
 ALTER TABLE `type`
-  MODIFY `type_id` int(2) NOT NULL AUTO_INCREMENT;
+  MODIFY `type_id` int(2) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -520,17 +542,41 @@ ALTER TABLE `user_role`
 -- AUTO_INCREMENT for table `vendor`
 --
 ALTER TABLE `vendor`
-  MODIFY `vendor_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `vendor_id` int(12) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+
+--
+-- AUTO_INCREMENT for table `view_all_users`
+--
+ALTER TABLE `view_all_users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
 --
 
 --
+-- Constraints for table `contract`
+--
+ALTER TABLE `contract`
+  ADD CONSTRAINT `fk_contract_type` FOREIGN KEY (`type_id`) REFERENCES `type` (`type_id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `service_delivery_manager`
+--
+ALTER TABLE `service_delivery_manager`
+  ADD CONSTRAINT `fk_sdm_role_id` FOREIGN KEY (`role_id`) REFERENCES `user_role` (`role_id`);
+
+--
 -- Constraints for table `users`
 --
 ALTER TABLE `users`
   ADD CONSTRAINT `fk_user_role` FOREIGN KEY (`role_id`) REFERENCES `user_role` (`role_id`);
+
+--
+-- Constraints for table `vendor`
+--
+ALTER TABLE `vendor`
+  ADD CONSTRAINT `fk_vendor_role_id` FOREIGN KEY (`role_id`) REFERENCES `user_role` (`role_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

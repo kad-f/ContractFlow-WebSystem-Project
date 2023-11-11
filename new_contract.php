@@ -230,6 +230,18 @@ if (isset($_POST['create_contract'])) {
         mysqli_query($conn, $insert_sdm);
         $sdm_id = mysqli_insert_id($conn);
 
+        // After inserting data into vendor and service_delivery_manager tables
+
+        // Insert vendor information into combined_users
+        $insert_vendor_info = "INSERT INTO view_all_users (name, email, contact_name, contact_phone, role_id, type)
+VALUES ('$vendor_name', '$vendor_email', '$vendor_email', '$vendor_contact', 2, 'vendor')";
+        mysqli_query($conn, $insert_vendor_info);
+
+        // Insert service delivery manager information into combined_users
+        $insert_sdm_info = "INSERT INTO view_all_users (name, email, contact_phone, role_id, type)
+VALUES ('$sdm_name', '$sdm_email', '$sdm_contact', 3, 'sdm')";
+        mysqli_query($conn, $insert_sdm_info);
+
         // Insert expiration details
         $insert_expiration = "INSERT INTO expiration(contract_no, date, renewal_provision_id, termination_rights, assignment_provision, notified) VALUES ('$reference_num','$expiration_date', '$renewal_provision', '$termination_provision', '$assignment_provision',0)";
         mysqli_query($conn, $insert_expiration);

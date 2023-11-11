@@ -1,22 +1,20 @@
 <?php
 include('./database/config.php');
 
-$query = "
-SELECT
-    u.name AS user_name, u.email AS user_email, r.name AS user_role,
-    vr.contact_name AS vendor_name, vr.email AS vendor_email, vr.phone_no AS vendor_phone, vr.role_id AS vendor_role,
-    sdm.name AS sdm_name, sdm.email AS sdm_email, sdm.phone_no AS sdm_phone, sdm.role_id AS sdm_role
-FROM
-    users u
-JOIN
-    user_role r ON u.role_id = r.role_id
-LEFT JOIN
-    vendor vr ON u.role_id = 2 AND u.id = vr.vendor_id
-LEFT JOIN
-    service_delivery_manager sdm ON u.role_id = 3 AND u.id = sdm.sdm_id
-";
-
+// Query to get data from view_all_users table
+$query = "SELECT * FROM view_all_users";
 $result = mysqli_query($conn, $query);
+
+// Output SQL query
+echo "SQL Query: $query<br>";
+
+// Check if the query was successful
+if (!$result) {
+    die("Error in SQL query: " . mysqli_error($conn));
+}
+
+// Fetch data
+$users = mysqli_fetch_all($result, MYSQLI_ASSOC);
 
 ?>
 
@@ -38,6 +36,7 @@ $result = mysqli_query($conn, $query);
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
+                    <th>Contact Phone</th>
                     <th>Role</th>
                     <th>Edit</th>
                     <th>Remove</th>
@@ -45,34 +44,16 @@ $result = mysqli_query($conn, $query);
             </thead>
             <tbody>
                 <?php
-                while ($row = mysqli_fetch_assoc($result)) {
+                // Display users
+                foreach ($users as $row) {
                     echo "<tr>";
-                    echo "<td>{$row['user_name']}</td>";
-                    echo "<td>{$row['user_email']}</td>";
-                    echo "<td>{$row['user_role']}</td>";
-                    echo "<td><a href='edit_user.php?id={$row['id']}'>Edit</a></td>";
-                    echo "<td><a href='delete_user.php?id={$row['id']}'>Delete</a></td>";
+                    echo "<td>" . ($row['name'] ?? 'N/A') . "</td>";
+                    echo "<td>" . ($row['email'] ?? 'N/A') . "</td>";
+                    echo "<td>" . ($row['contact_phone'] ?? 'N/A') . "</td>";
+                    echo "<td>" . ($row['type'] ?? 'N/A') . "</td>";
+                    echo "<td><a href='edit_user.php?type=" . ($row['UserType'] ?? '') . "&id=" . ($row['ID'] ?? '') . "'>Edit</a></td>";
+                    echo "<td><a href='delete_user.php?type=" . ($row['UserType'] ?? '') . "&id=" . ($row['ID'] ?? '') . "'>Delete</a></td>";
                     echo "</tr>";
-
-                    if ($row['vendor_name'] !== null) {
-                        echo "<tr>";
-                        echo "<td>{$row['vendor_name']}</td>";
-                        echo "<td>{$row['vendor_email']}</td>";
-                        echo "<td>{$row['vendor_role']}</td>";
-                        echo "<td><a href='edit_user.php?id={$row['vendor_id']}'>Edit</a></td>";
-                        echo "<td><a href='delete_user.php?id={$row['vendor_id']}'>Delete</a></td>";
-                        echo "</tr>";
-                    }
-
-                    if ($row['sdm_name'] !== null) {
-                        echo "<tr>";
-                        echo "<td>{$row['sdm_name']}</td>";
-                        echo "<td>{$row['sdm_email']}</td>";
-                        echo "<td>{$row['sdm_role']}</td>";
-                        echo "<td><a href='edit_user.php?id={$row['sdm_id']}'>Edit</a></td>";
-                        echo "<td><a href='delete_user.php?id={$row['sdm_id']}'>Delete</a></td>";
-                        echo "</tr>";
-                    }
                 }
                 ?>
             </tbody>

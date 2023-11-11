@@ -1,5 +1,5 @@
 <?php
-include('config.php');
+include('./database/config.php');
 if (isset($_SESSION['logged']) != true) {
     echo "Not logged in";
     header("Location: login.php");

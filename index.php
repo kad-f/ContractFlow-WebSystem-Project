@@ -143,11 +143,15 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 				</li>
 				<li class="cd-label">User Management</li>
 				<li class="has-children bookmarks">
-					<a href="#0">Vendors</a>
+					<a href="#0">Users</a>
 					<ul>
 						<?php if ($roleID == 1 || $roleID == 3): ?>
 							<li><a href="index.php?view_all_vendor">View All Vendors</a></li>
+							<li><a href="index.php?view_all_users">View All Users</a></li>
+						<?php endif; ?>
+						<?php if ($roleID == 1): ?>
 							<li><a href="index.php?add_vendor">Add Vendor</a></li>
+							<li><a href="index.php?add_vendor">Add User</a></li>
 						<?php endif; ?>
 						<?php if ($roleID == 2): ?>
 							<li><a href="index.php?view_all_vendor">View All Vendors</a></li>
@@ -224,6 +228,9 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 			}
 			if (isset($_GET['view_all_vendor'])) {
 				include("view_all_vendor.php");
+			}
+			if (isset($_GET['view_all_users'])) {
+				include("view_all_users.php");
 			}
 			if (isset($_GET['add_vendor'])) {
 				include("add_vendor.php");

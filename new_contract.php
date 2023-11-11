@@ -17,7 +17,7 @@ include('update_notifications.php');
                 <li>
                     <label for="reference-num">Reference No.</label>
                     <input type="text" id="reference-num" name="reference-num"
-                        placeholder="Enter contract reference number here">
+                        value="<?php echo strtoupper(uniqid()); ?>" placeholder="Enter contract reference number here">
                 </li>
                 <li>
                     <p>Type</p>
@@ -188,7 +188,6 @@ include('update_notifications.php');
 
 if (isset($_POST['create_contract'])) {
     //Text data variables
-    $reference_num = mysqli_real_escape_string($conn, $_POST['reference-num']);
     $contract_type = $_POST['contract_type'];
     $category = mysqli_real_escape_string($conn, $_POST['category']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
@@ -212,35 +211,42 @@ if (isset($_POST['create_contract'])) {
     $renewal_provision = mysqli_real_escape_string($conn, $_POST['renewal_provision']);
     $termination_provision = mysqli_real_escape_string($conn, $_POST['termination_provision']);
     $assignment_provision = mysqli_real_escape_string($conn, $_POST['assignment_provision']);
+    // Generate a unique reference number
+    $reference_num = strtoupper(uniqid());
 
-    //Insert vendor,sdm into vendor and sdm table and get it's id - then store that id in contract table
-    $insert_vendor = "Insert into vendor(contact_name, email, phone_no) values('$vendor_name','$vendor_email', '$vendor_contact')";
-    mysqli_query($conn, $insert_vendor);
-    $vendor_id = mysqli_insert_id($conn);
+    // Check if the contract already exists in the selected category
+    $check_contract_query = "SELECT * FROM contract WHERE category_id = '$category' AND contract_no = '$reference_num'";
+    $check_contract_result = mysqli_query($conn, $check_contract_query);
 
-    $insert_sdm = "Insert into service_delivery_manager(name, email, phone_no) values('$sdm_name','$sdm_email', '$sdm_contact')";
-    mysqli_query($conn, $insert_sdm);
-    $sdm_id = mysqli_insert_id($conn);
+    if (mysqli_num_rows($check_contract_result) > 0) {
+        echo "<script>alert('Contract already exists in this category.');</script>";
+    } else {
+        // Insert vendor and SDM details and get their IDs
+        $insert_vendor = "INSERT INTO vendor(contact_name, email, phone_no) VALUES ('$vendor_name','$vendor_email', '$vendor_contact')";
+        mysqli_query($conn, $insert_vendor);
+        $vendor_id = mysqli_insert_id($conn);
 
-    $insert_expiration = "Insert into expiration(contract_no, date, renewal_provision_id, termination_rights, assignment_provision,notified) values('$reference_num','$expiration_date', '$renewal_provision', '$termination_provision', '$assignment_provision',0)";
-    mysqli_query($conn, $insert_expiration);
-    $expiration_id = mysqli_insert_id($conn);
+        $insert_sdm = "INSERT INTO service_delivery_manager(name, email, phone_no) VALUES ('$sdm_name','$sdm_email', '$sdm_contact')";
+        mysqli_query($conn, $insert_sdm);
+        $sdm_id = mysqli_insert_id($conn);
 
-    $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, sdm_remarks, annual_spend, payment_type, payment_terms, status, expiration_id) VALUES('$reference_num', '$contract_type', '$category', '$description', '$date', '$supplier', '$life', '$vendor_id', '$sdm_id', '$remarks', '$spend', '$payment_type', '$terms', '$status', '$expiration_id')";
-    $result_contract = mysqli_query($conn, $insert_contract);
+        // Insert expiration details
+        $insert_expiration = "INSERT INTO expiration(contract_no, date, renewal_provision_id, termination_rights, assignment_provision, notified) VALUES ('$reference_num','$expiration_date', '$renewal_provision', '$termination_provision', '$assignment_provision',0)";
+        mysqli_query($conn, $insert_expiration);
+        $expiration_id = mysqli_insert_id($conn);
 
-    if ($result_contract) {
+        // Insert contract details
+        $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, sdm_remarks, annual_spend, payment_type, payment_terms, status, expiration_id) VALUES ('$reference_num', '$contract_type', '$category', '$description', '$date', '$supplier', '$life', '$vendor_id', '$sdm_id', '$remarks', '$spend', '$payment_type', '$terms', '$status', '$expiration_id')";
+        $result_contract = mysqli_query($conn, $insert_contract);
 
-        $add_notification = "Insert into notification(contract_no,status, notification_text) values('$reference_num',0,'Contract $reference_num Added ')";
-        mysqli_query($conn, $add_notification);
+        if ($result_contract) {
+            // Add notification
+            $add_notification = "INSERT INTO notification(contract_no, status, notification_text) VALUES ('$reference_num', 0, 'Contract $reference_num Added')";
+            mysqli_query($conn, $add_notification);
 
-
-
-
-        echo "<script>window.open('index.php?new_contract','_self')</script>";
+            echo "<script>window.open('index.php?new_contract','_self')</script>";
+        }
     }
-
-
 
 }
 ?>

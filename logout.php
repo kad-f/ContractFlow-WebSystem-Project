@@ -1,19 +1,15 @@
 <?php
-	session_start();
+session_start();
 
-	if(!isset($_SESSION['logged']))
-	{
- 		header("Location: login.php");
-	}
-	else if(isset($_SESSION['logged'])!="")
-	{
- 		header("Location: index.php");
-	}
+if (!isset($_SESSION['logged']) || $_SESSION['logged'] !== "true") {
+	header("Location: login.php");
+	exit();
+}
 
-	if(isset($_GET['logout']))
-	{
- 		session_destroy();
- 		unset($_SESSION['logged']);
- 		header("Location: login.php");
-	}
+if (isset($_GET['logout'])) {
+	session_destroy();
+	unset($_SESSION['logged']);
+	header("Location: login.php");
+	exit();
+}
 ?>

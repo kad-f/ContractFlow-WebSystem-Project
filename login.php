@@ -27,27 +27,51 @@ if (isset($_POST['login'])) {
 	}
 }
 ?>
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 
 <head>
-	<title>Login | E-Contract</title>
-	<link rel="stylesheet" type="text/css" href="css/login.css">
-	<link rel="stylesheet" type="text/css" href="css/reset.css">
-	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="login.css">
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<title>Login | ContractFlow</title>
 </head>
 
 <body>
-	<div class="container">
-		<div class="wrapper">
-			<form action="" method="post" name="Login_Form" class="form-signin">
-				<h3 class="form-signin-heading">E-Contract</h3>
-				<hr class="colorgraph"><br>
-				<input type="email" class="form-control" name="email" placeholder="Username" required="" autofocus="" />
-				<input type="password" class="form-control" name="password" placeholder="Password" required="" />
-				<br>
-				<button class="btn btn-lg btn-primary btn-block" name="login" value="login" type="Submit">Login</button>
-			</form>
+	<div class="wrapper">
+		<div class="container main">
+			<div class="row">
+				<div class="col-md-6 side-image">
+					<img src="img/cd-logo.png" alt="">
+					<div class="text">
+						<p>Simplicity meets efficiency for seamless business success.<i>- Contract<span>Flow</span></i>
+						</p>
+					</div>
+				</div>
+
+				<div class="col-md-6 right">
+					<form action="" method="post" name="Login_Form" class="form-signin">
+						<div class="input-box">
+							<header>Contract<span>Flow</span></header>
+							<div class="input-field">
+								<input type="email" class="input" name="email" id="email" required=""
+									autocomplete="off">
+								<label for="email">Email</label>
+							</div>
+							<div class="input-field">
+								<input type="password" class="input" name="password" id="pass" required="">
+								<label for="pass">Password</label>
+							</div>
+							<div class="input-field">
+								<input class="custom-button" name="login" value="LOGIN" type="Submit">
+							</div>
+
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
 </body>

@@ -55,7 +55,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 						Account
 					</a>
 					<ul>
-						<li><a href="index.php?logout">Logout</a></li>
+						<li><a href="logout.php?logout">Logout</a></li>
 					</ul>
 				</li>
 			</ul>

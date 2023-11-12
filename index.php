@@ -175,14 +175,12 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 						<a href="index.php?attach_invoice">Attach an Invoice</a>
 					</li>
 				<?php endif; ?>
-				<?php if ($roleID == 2): ?>
-					<li class="has-children images">
-						<a href="#0">Invoice Details</a>
-					</li>
-					<li class="has-children users">
-						<a href="#0">Generate Report</a>
-					</li>
-				<?php endif; ?>
+				<li class="has-children images">
+					<a href="#0">Invoice Details</a>
+				</li>
+				<li class="has-children users">
+					<a href="#0">Generate Report</a>
+				</li>
 			</ul>
 
 			<ul>
@@ -244,7 +242,6 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 			if (isset($_GET['view_all_reviews'])) {
 				include("view_all_reviews.php");
 			}
-
 			if (isset($_GET['view_all_issues'])) {
 				include("view_all_issues.php");
 			}

@@ -31,27 +31,40 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 	<script src="js/modernizr.js"></script> <!-- Modernizr -->
 
 	<title>E-Contract</title>
+	<style>
+		.cd-side-nav .action-btn a {
+			background-color: yellow !important;
+			color: #000 !important;
+		}
+
+		.cd-side-nav .action-btn a:hover {
+			background-color: #ffeb3b !important;
+		}
+
+		.cd-side-nav .count {
+			background-color: yellow;
+			color: #000;
+		}
+	</style>
+
+
 </head>
 
 <body>
 	<header class="cd-main-header">
-		<a href="index.html" class="cd-logo"><img src="img/cd-logo.svg" alt="Logo"></a>
-
-		<div class="cd-search is-hidden">
-			<form action="#0">
-				<input type="search" placeholder="Search...">
-			</form>
-		</div> <!-- cd-search -->
-
+		<a href="index.html" class="cd-logo"><img src="img/cd-logo.png" alt="Logo" height="25"></a>
 		<a href="#0" class="cd-nav-trigger">Menu<span></span></a>
 
 		<nav class="cd-nav">
 			<ul class="cd-top-nav">
-				<!-- <li><a href="#0">Tour</a></li>
-				<li><a href="#0">Support</a></li> -->
+				<div class="cd-search is-hidden">
+					<form action="#0">
+						<input type="search" placeholder="Search...">
+					</form>
+				</div>
 				<li class="has-children account">
 					<a href="#0">
-						<img src="img/cd-avatar.png" alt="avatar">
+						<img src="img/cd-user.png" alt="avatar">
 						Account
 					</a>
 					<ul>
@@ -185,8 +198,9 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
 			<ul>
 				<li class="cd-label">Action</li>
-				<li class="action-btn"><a href="#0">+ Submit an Issue</a></li>
+				<li class="action-btn"><a href="#0" class="yellow-button">+ Submit an Issue</a></li>
 			</ul>
+
 		</nav>
 
 		<div class="content-wrapper">

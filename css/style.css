@@ -5,7 +5,9 @@ Primary style
 -------------------------------- */
 @import url('https://fonts.googleapis.com/css?family=Montserrat');
 
-*, *::after, *::before {
+*,
+*::after,
+*::before {
   box-sizing: border-box;
 }
 
@@ -15,13 +17,13 @@ html {
 
 body {
   font-size: 1.6rem;
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #3e454c;
   background-color: #ffffff;
 }
 body::after {
   clear: both;
-  content: "";
+  content: '';
   display: table;
 }
 
@@ -31,14 +33,14 @@ a {
 }
 
 input {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   font-size: 1.6rem;
 }
 
-input[type="search"]::-webkit-search-decoration,
-input[type="search"]::-webkit-search-cancel-button,
-input[type="search"]::-webkit-search-results-button,
-input[type="search"]::-webkit-search-results-decoration {
+input[type='search']::-webkit-search-decoration,
+input[type='search']::-webkit-search-cancel-button,
+input[type='search']::-webkit-search-results-button,
+input[type='search']::-webkit-search-results-decoration {
   display: none;
 }
 
@@ -102,7 +104,7 @@ Header
 }
 .cd-main-header::after {
   clear: both;
-  content: "";
+  content: '';
   display: table;
 }
 @media only screen and (min-width: 768px) {
@@ -139,7 +141,9 @@ Header
   white-space: nowrap;
   color: transparent;
 }
-.cd-nav-trigger span, .cd-nav-trigger span::before, .cd-nav-trigger span::after {
+.cd-nav-trigger span,
+.cd-nav-trigger span::before,
+.cd-nav-trigger span::after {
   /* hamburger icon in CSS */
   position: absolute;
   display: inline-block;
@@ -157,7 +161,8 @@ Header
   -moz-transition: background 0.2s;
   transition: background 0.2s;
 }
-.cd-nav-trigger span::before, .cd-nav-trigger span::after {
+.cd-nav-trigger span::before,
+.cd-nav-trigger span::after {
   /* other 2 lines */
   content: '';
   right: 0;
@@ -190,7 +195,8 @@ Header
   /* hide line in the center */
   background: rgba(255, 255, 255, 0);
 }
-.cd-nav-trigger.nav-is-visible span::before, .cd-nav-trigger.nav-is-visible span::after {
+.cd-nav-trigger.nav-is-visible span::before,
+.cd-nav-trigger.nav-is-visible span::after {
   /* keep visible other 2 lines */
   background: white;
 }
@@ -242,7 +248,7 @@ Header
   width: 100%;
   height: 36px;
   border: none;
-  border-radius: .25em;
+  border-radius: 0.25em;
   -webkit-appearance: none;
   -moz-appearance: none;
   -ms-appearance: none;
@@ -268,7 +274,8 @@ Header
     background-position: 0 -16px;
     left: 1em;
   }
-  .cd-search form, .cd-search input {
+  .cd-search form,
+  .cd-search input {
     height: 100%;
     width: 100%;
   }
@@ -352,7 +359,7 @@ Top Navigation
     margin-right: 0;
   }
   .cd-top-nav > li a {
-    padding: 1em .6em !important;
+    padding: 1em 0.6em !important;
   }
   .cd-top-nav img {
     display: block;
@@ -404,7 +411,8 @@ Sidebar
 .cd-side-nav > ul:last-of-type {
   padding-bottom: 0;
 }
-.cd-side-nav .cd-label, .cd-side-nav a {
+.cd-side-nav .cd-label,
+.cd-side-nav a {
   display: block;
   padding: 1em 5%;
 }
@@ -413,7 +421,7 @@ Sidebar
   font-weight: bold;
   color: #646a6f;
   font-size: 1rem;
-  letter-spacing: .1em;
+  letter-spacing: 0.1em;
 }
 .cd-side-nav a {
   position: relative;
@@ -461,7 +469,7 @@ Sidebar
 .cd-side-nav > ul > li.users > a::before {
   background-position: -16px 0;
 }
-.cd-side-nav .count {
+c{
   /* notification badge */
   position: absolute;
   top: 50%;
@@ -474,7 +482,7 @@ Sidebar
   right: calc(5% + 16px + 0.4em);
   padding: 0.2em 0.4em;
   background-color: #ff7e66;
-  border-radius: .25em;
+  border-radius: 0.25em;
   color: #ffffff;
   font-weight: bold;
   font-size: 1.2rem;
@@ -485,9 +493,10 @@ Sidebar
   margin: 0 5%;
   padding: 1em 0;
   background-color: #1784c7;
-  border-radius: .25em;
+  border-radius: 0.25em;
   border: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
   text-align: center;
   color: #ffffff;
   font-weight: bold;
@@ -608,8 +617,8 @@ Sidebar
     color: #ffffff;
     height: auto;
     width: auto;
-    border-radius: .25em;
-    padding: .2em .4em;
+    border-radius: 0.25em;
+    padding: 0.2em 0.4em;
     top: 50%;
     bottom: auto;
     -webkit-transform: translateY(-50%);
@@ -723,7 +732,8 @@ Sidebar
     left: 0;
     box-shadow: none;
   }
-  .no-touch .cd-side-nav .has-children:hover > ul, .cd-side-nav .has-children.hover > ul {
+  .no-touch .cd-side-nav .has-children:hover > ul,
+  .cd-side-nav .has-children.hover > ul {
     /* show subnavigation on hover */
     display: block;
     opacity: 1;

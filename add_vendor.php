@@ -39,19 +39,32 @@ if (isset($_POST['add_vendor'])) {
     $vendor_name = mysqli_real_escape_string($conn, $_POST['vendor_name']);
     $vendor_email = mysqli_real_escape_string($conn, $_POST['vendor_email']);
     $vendor_contact = mysqli_real_escape_string($conn, $_POST['vendor_contact']);
-
-    // Use prepared statements to prevent SQL injection
     $insert_vendor = "INSERT INTO vendor (contact_name, email, phone_no) VALUES (?, ?, ?)";
-    $stmt = mysqli_prepare($conn, $insert_vendor);
-    mysqli_stmt_bind_param($stmt, "sss", $vendor_name, $vendor_email, $vendor_contact);
+    $stmt_vendor = mysqli_prepare($conn, $insert_vendor);
+    mysqli_stmt_bind_param($stmt_vendor, "sss", $vendor_name, $vendor_email, $vendor_contact);
 
-    if (mysqli_stmt_execute($stmt)) {
-        echo "<script>alert('New Vendor added successfully!')</script>";
-        echo"<script>window.open('index.php?add_vendor','_self')</script>";
+    if (mysqli_stmt_execute($stmt_vendor)) {
+        $vendor_id = mysqli_insert_id($conn);
+
+        $default_password = password_hash("vendor123", PASSWORD_DEFAULT);
+
+        $insert_user = "INSERT INTO users (name, email, password, role_id) VALUES (?, ?, ?, 2)";
+        $stmt_user = mysqli_prepare($conn, $insert_user);
+        mysqli_stmt_bind_param($stmt_user, "sss", $vendor_name, $vendor_email, $default_password);
+
+        if (mysqli_stmt_execute($stmt_user)) {
+            echo "<script>alert('New Vendor added successfully!')</script>";
+            echo "<script>window.open('index.php?add_vendor','_self')</script>";
+        } else {
+            echo "Error: " . mysqli_error($conn);
+        }
+
+        mysqli_stmt_close($stmt_user);
     } else {
         echo "Error: " . mysqli_error($conn);
     }
-    mysqli_stmt_close($stmt);
+
+    mysqli_stmt_close($stmt_vendor);
 }
 
 ?>

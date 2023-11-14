@@ -469,7 +469,7 @@ Sidebar
 .cd-side-nav > ul > li.users > a::before {
   background-position: -16px 0;
 }
-c{
+.cd-side-nav .count {
   /* notification badge */
   position: absolute;
   top: 50%;

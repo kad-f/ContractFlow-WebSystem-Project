@@ -18,7 +18,7 @@ if (isset($_POST['login'])) {
 			$_SESSION['logged'] = "true";
 			$_SESSION['id'] = $row['id'];
 			$_SESSION['role_id'] = $row['role_id']; // Add this line to set the role_id in the session
-			header("Location: index.php");
+			header("Location: dashboard.php");
 		} else {
 			echo "<script>alert('Incorrect Password. Please try again.');</script>";
 		}

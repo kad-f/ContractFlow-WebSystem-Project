@@ -98,7 +98,8 @@ include('update_notifications.php');
                 </li>
                 <li>
                     <label for="terms">Terms</label>
-                    <textarea rows="6" name="terms" id="terms" placeholder="Enter terms of payment here"></textarea>
+                    <textarea rows="6" name="payment_terms" id="terms"
+                        placeholder="Enter terms of payment here"></textarea>
                 </li>
                 <li>
                     <label for="status">Status</label>

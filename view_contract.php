@@ -33,7 +33,8 @@ if (!$category_id) {
         }
 
         .contract-card {
-            max-width: 600px;
+            max-width: 90%;
+            /* Adjusted for responsiveness */
             margin: 0 auto;
             background-color: #fff;
             border: 1px solid #ddd;
@@ -41,6 +42,8 @@ if (!$category_id) {
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             padding: 20px;
             margin-top: 20px;
+            overflow-x: auto;
+            /* Added for horizontal scrolling if needed */
         }
 
         .contract-field {
@@ -53,13 +56,16 @@ if (!$category_id) {
         h2 {
             color: #333;
             text-align: center;
+            font-size: 1.5em;
+            /* Adjusted for responsiveness */
         }
 
-        .no-contract-message {
-            text-align: center;
-            font-size: 18px;
-            color: #888;
-            margin-top: 20px;
+        .contract-field strong {
+            display: block;
+            font-size: 1.2em;
+            /* Adjusted for responsiveness */
+            color: #333;
+            margin-bottom: 5px;
         }
 
         .contract-field strong {
@@ -67,6 +73,23 @@ if (!$category_id) {
             font-size: 16px;
             color: #333;
             margin-bottom: 5px;
+        }
+
+        @media only screen and (max-width: 600px) {
+            .contract-card {
+                max-width: 100%;
+                /* Adjusted for smaller screens */
+            }
+
+            h2 {
+                font-size: 1.2em;
+                /* Adjusted for smaller screens */
+            }
+
+            .contract-field strong {
+                font-size: 1em;
+                /* Adjusted for smaller screens */
+            }
         }
     </style>
 </head>
@@ -82,7 +105,10 @@ if (!$category_id) {
         LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
         LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
         LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
+        LEFT JOIN payment_type ON contract.payment_type = payment_type.payment_type_id
         WHERE contract.category_id = '$category_id'";
+
+
 
 
         $result = $conn->query($sql);
@@ -136,7 +162,7 @@ if (!$category_id) {
                 </div>
                 <div class="contract-field">
                     <strong>Payment Type:</strong>
-                    <?php echo $row['payment_type']; ?>
+                    <?php echo $row['payment_name']; ?>
                 </div>
                 <div class="contract-field">
                     <strong>Payment Terms:</strong>
@@ -150,7 +176,6 @@ if (!$category_id) {
                     <strong>Expiration Date:</strong>
                     <?php echo $row['date']; ?>
                 </div>
-                <!-- Add other contract fields here as needed -->
 
                 <?php
             }

@@ -30,7 +30,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 	<link rel="stylesheet" href="css/form_style.css"> <!-- Form Styling -->
 	<script src="js/modernizr.js"></script> <!-- Modernizr -->
 
-	<title>E-Contract</title>
+	<title>ContractFlow</title>
 	<style>
 		.cd-side-nav .action-btn a {
 			background-color: yellow !important;
@@ -52,7 +52,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
 <body>
 	<header class="cd-main-header">
-		<a href="index.html" class="cd-logo"><img src="img/cd-logo.png" alt="Logo" height="25"></a>
+		<a href="index.php?dashboard" class="cd-logo"><img src="img/cd-logo.png" alt="Logo" height="25"></a>
 		<a href="#0" class="cd-nav-trigger">Menu<span></span></a>
 
 		<nav class="cd-nav">
@@ -78,7 +78,11 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 	<main class="cd-main-content">
 		<nav class="cd-side-nav">
 			<ul>
+
 				<li class="cd-label">Main</li>
+				<li class="has-children overview">
+					<a href="index.php?dashboard">Dashboard</a>
+				</li>
 				<li class="has-children overview">
 					<?php if ($roleID == 1 || $roleID == 3): ?>
 						<a href="#0">Manage Contracts</a>
@@ -249,6 +253,9 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 			}
 			if (isset($_GET['edit_vendor'])) {
 				include("edit_vendor.php");
+			}
+			if (isset($_GET['dashboard'])) {
+				include("dashboard.php");
 			}
 			if (isset($_GET['add_review'])) {
 				include("add_review.php");

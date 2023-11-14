@@ -17,8 +17,16 @@ if (isset($_POST['login'])) {
 		if ($row['password'] == $password) {
 			$_SESSION['logged'] = "true";
 			$_SESSION['id'] = $row['id'];
-			$_SESSION['role_id'] = $row['role_id']; // Add this line to set the role_id in the session
-			header("Location: dashboard.php");
+			$_SESSION['role_id'] = $row['role_id'];
+
+			// Check the user's role and redirect accordingly
+			if ($row['role_id'] == 1 || $row['role_id'] == 3) {
+				header("Location: dashboard.php");
+			} elseif ($row['role_id'] == 2) {
+				header("Location: view_contract.php");
+			} else {
+				echo "<script>alert('Unknown role. Please contact administrator.');</script>";
+			}
 		} else {
 			echo "<script>alert('Incorrect Password. Please try again.');</script>";
 		}

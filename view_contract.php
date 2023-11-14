@@ -99,23 +99,53 @@ if (!$category_id) {
         <h2>Contract Details</h2>
         <br>
         <?php
-        $sql = "SELECT * FROM contract 
-        LEFT JOIN type ON contract.type_id = type.type_id
-        LEFT JOIN category ON contract.category_id = category.category_id
-        LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
-        LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
-        LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
-        LEFT JOIN payment_type ON contract.payment_type = payment_type.payment_type_id
-        WHERE contract.category_id = '$category_id'";
+        // Get the category ID from the query parameter in the URL
+        $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
+        if (!$category_id) {
+            header("Location: index.php");
+            exit();
+        }
 
+        // Check the user's role
+        $role_id = isset($_SESSION['role_id']) ? $_SESSION['role_id'] : null;
 
+        if ($role_id == 1 || $role_id == 3) {
+            // Admin can see all contracts
+            $sql = "SELECT * FROM contract 
+                    LEFT JOIN type ON contract.type_id = type.type_id
+                    LEFT JOIN category ON contract.category_id = category.category_id
+                    LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
+                    LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
+                    LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
+                    LEFT JOIN payment_type ON contract.payment_type = payment_type.payment_type_id
+                    WHERE contract.category_id = '$category_id'";
+        } elseif ($role_id == 2) {
+            // Vendor can see only contracts assigned to them
+            $vendor_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+
+            if ($vendor_id) {
+                $sql = "SELECT * FROM contract 
+                        LEFT JOIN type ON contract.type_id = type.type_id
+                        LEFT JOIN category ON contract.category_id = category.category_id
+                        LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
+                        LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
+                        LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
+                        LEFT JOIN payment_type ON contract.payment_type = payment_type.payment_type_id
+                        WHERE contract.category_id = '$category_id' AND contract.vendor_id = '$vendor_id'";
+            } else {
+                // Handle the case where vendor_id is not set (e.g., if the session is not properly initialized)
+                echo "Error: Vendor ID not found.";
+                exit();
+            }
+        }
 
         $result = $conn->query($sql);
 
         if ($result === false) {
             die("Error in SQL query: " . $conn->error);
         }
+
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {

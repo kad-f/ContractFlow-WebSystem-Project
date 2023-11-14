@@ -95,6 +95,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 						</ul>
 					<?php endif; ?>
 					<?php if ($roleID == 2): ?>
+						<a href="#0">Manage Contracts</a>
 						<ul>
 							<li><a href="index.php?view_contract&category_id=1">Hardware and Software Services</a></li>
 							<li><a href="index.php?view_contract&category_id=2">Network and Security Services</a></li>

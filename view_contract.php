@@ -120,24 +120,16 @@ if (!$category_id) {
                     LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
                     LEFT JOIN payment_type ON contract.payment_type = payment_type.payment_type_id
                     WHERE contract.category_id = '$category_id'";
-        } elseif ($role_id == 2) {
-            // Vendor can see only contracts assigned to them
-            $vendor_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
-
-            if ($vendor_id) {
-                $sql = "SELECT * FROM contract 
-                        LEFT JOIN type ON contract.type_id = type.type_id
-                        LEFT JOIN category ON contract.category_id = category.category_id
-                        LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
-                        LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
-                        LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
-                        LEFT JOIN payment_type ON contract.payment_type = payment_type.payment_type_id
-                        WHERE contract.category_id = '$category_id' AND contract.vendor_id = '$vendor_id'";
-            } else {
-                // Handle the case where vendor_id is not set (e.g., if the session is not properly initialized)
-                echo "Error: Vendor ID not found.";
-                exit();
-            }
+        } else if ($role_id == 2) { // Assuming 2 is the role_id for Vendor
+            $vendor_id = $_SESSION['id'];
+            $sql = "SELECT * FROM contract 
+                    LEFT JOIN type ON contract.type_id = type.type_id
+                    LEFT JOIN category ON contract.category_id = category.category_id
+                    LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
+                    LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
+                    LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
+                    LEFT JOIN payment_type ON contract.payment_type = payment_type.payment_type_id
+                    WHERE contract.vendor_id = '$vendor_id'";
         }
 
         $result = $conn->query($sql);

@@ -209,7 +209,8 @@ if (isset($_POST['create_contract'])) {
     $assignment_provision = mysqli_real_escape_string($conn, $_POST['assignment_provision']);
     // Generate a unique reference number
     $reference_num = strtoupper(uniqid());
-
+    $created_at = date('Y-m-d H:i:s');
+    
     // Check if the contract already exists in the selected category
     $check_contract_query = "SELECT * FROM contract WHERE category_id = '$category' AND contract_no = '$reference_num'";
     $check_contract_result = mysqli_query($conn, $check_contract_query);
@@ -223,8 +224,8 @@ if (isset($_POST['create_contract'])) {
         $expiration_id = mysqli_insert_id($conn);
 
         // Insert contract details
-        $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, sdm_remarks, annual_spend, payment_type, payment_terms, status, expiration_id) VALUES ('$reference_num', '$contract_type', '$category', '$description', '$date', '$supplier', '$life', '$vendor_id', '$sdm_id', '$remarks', '$spend', '$payment_type', '$terms', '$status', '$expiration_id')";
-        $result_contract = mysqli_query($conn, $insert_contract);
+        $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, sdm_remarks, annual_spend, payment_type, payment_terms, status, expiration_id, created_at) VALUES ('$reference_num', '$contract_type', '$category', '$description', '$date', '$supplier', '$life', '$vendor_id', '$sdm_id', '$remarks', '$spend', '$payment_type', '$terms', '$status', '$expiration_id', '$created_at')";
+    $result_contract = mysqli_query($conn, $insert_contract);
 
         if ($result_contract) {
             // Add notification

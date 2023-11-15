@@ -16,8 +16,7 @@ include('update_notifications.php');
             <ul class="form-flex-outer">
                 <li>
                     <label for="reference-num">Reference No.</label>
-                    <input type="text" id="reference-num" name="reference-num"
-                        value="<?php echo strtoupper(uniqid()); ?>" placeholder="Enter contract reference number here">
+                    <input type="text" id="reference-num" name="reference-num" value="<?php echo strtoupper(uniqid()); ?>" placeholder="Enter contract reference number here">
                 </li>
                 <li>
                     <p>Type</p>
@@ -57,8 +56,7 @@ include('update_notifications.php');
                 </li>
                 <li>
                     <label for="description">Description</label>
-                    <textarea rows="6" id="description" name="description"
-                        placeholder="Enter Goods/Services Description here"></textarea>
+                    <textarea rows="6" id="description" name="description" placeholder="Enter Goods/Services Description here"></textarea>
                 </li>
                 <li>
                     <label for="datepicker">Date of Agreement</label>
@@ -98,8 +96,7 @@ include('update_notifications.php');
                 </li>
                 <li>
                     <label for="terms">Terms</label>
-                    <textarea rows="6" name="payment_terms" id="terms"
-                        placeholder="Enter terms of payment here"></textarea>
+                    <textarea rows="6" name="payment_terms" id="terms" placeholder="Enter terms of payment here"></textarea>
                 </li>
                 <li>
                     <label for="status">Status</label>
@@ -107,42 +104,46 @@ include('update_notifications.php');
                 </li>
             </ul>
         </fieldset>
+        <!-- Vendor Details -->
         <fieldset>
             <legend>Vendor Details</legend>
             <ul class="form-flex-outer">
                 <li>
-                    <label for="vendor_name">Name</label>
-                    <input type="text" id="vendor_name" name="vendor_name" placeholder="Enter Vendor Name">
-                </li>
-                <li>
-                    <label for="vendor_email">Email</label>
-                    <input type="email" id="vendor_email" name="vendor_email" placeholder="Enter Vendor Email">
-                </li>
-                <li>
-                    <label for="vendor_contact">Contact Number</label>
-                    <input type="text" id="vendor_contact" name="vendor_contact"
-                        placeholder="Enter Vendor Contact number">
+                    <label for="vendor_id">Vendor</label>
+                    <select name="vendor_id" id="vendor_id" required>
+                        <option>Select a Vendor</option>
+                        <?php
+                        $get_vendors = "SELECT * FROM vendor";
+                        $result_vendors = mysqli_query($conn, $get_vendors);
+                        while ($row_vendor = mysqli_fetch_array($result_vendors)) {
+                            $vendor_id = $row_vendor['vendor_id'];
+                            $vendor_name = $row_vendor['contact_name'];
+                            echo "<option value='$vendor_id'>$vendor_name</option>";
+                        }
+                        ?>
+                    </select>
                 </li>
             </ul>
         </fieldset>
+
+        <!-- Service Delivery Manager Details -->
         <fieldset>
             <legend>Service Delivery Manager</legend>
             <ul class="form-flex-outer">
                 <li>
-                    <label for="sdm_name">Name</label>
-                    <input type="text" id="sdm_name" name="sdm_name" placeholder="Enter SDM Name">
-                </li>
-                <li>
-                    <label for="sdm_email">Email</label>
-                    <input type="email" id="sdm_email" name="sdm_email" placeholder="Enter Vendor Email">
-                </li>
-                <li>
-                    <label for="sdm_contact">Contact</label>
-                    <input type="text" id="sdm_contact" name="sdm_contact" placeholder="Enter Vendor Contact number">
-                </li>
-                <li>
-                    <label for="remarks">Remarks</label>
-                    <textarea rows="6" name="remarks" id="remarks" placeholder="Enter Remarks here"></textarea>
+                    <label for="sdm_id">Service Delivery Manager</label>
+                    <select name="sdm_id" id="sdm_id" required>
+                        <option>Select a Service Delivery Manager</option>
+                        <?php
+                        $get_sdms = "SELECT * FROM service_delivery_manager";
+                        $result_sdms = mysqli_query($conn, $get_sdms);
+                        while ($row_sdm = mysqli_fetch_array($result_sdms)) {
+                            $sdm_id = $row_sdm['sdm_id'];
+                            $sdm_name = $row_sdm['name'];
+                            echo "<option value='$sdm_id'>$sdm_name</option>";
+                        }
+                        ?>
+                    </select>
                 </li>
             </ul>
         </fieldset>
@@ -170,13 +171,11 @@ include('update_notifications.php');
                 </li>
                 <li>
                     <label for="termination_provision">Termination Rights / Provision</label>
-                    <textarea rows="6" name="termination_provision" id="termination_provision"
-                        placeholder="Enter Remarks here"></textarea>
+                    <textarea rows="6" name="termination_provision" id="termination_provision" placeholder="Enter Remarks here"></textarea>
                 </li>
                 <li>
                     <label for="assignment_provision">Assignment Provision</label>
-                    <input type="text" id="assignment_provision" name="assignment_provision"
-                        placeholder="Assignment Provision">
+                    <input type="text" id="assignment_provision" name="assignment_provision" placeholder="Assignment Provision">
                 </li>
                 <li>
                     <input type="submit" name="create_contract">
@@ -200,12 +199,8 @@ if (isset($_POST['create_contract'])) {
     $spend = mysqli_real_escape_string($conn, $_POST['spend']);
     $terms = mysqli_real_escape_string($conn, $_POST['payment_terms']);
     $status = mysqli_real_escape_string($conn, $_POST['status']);
-    $vendor_name = mysqli_real_escape_string($conn, $_POST['vendor_name']);
-    $vendor_email = mysqli_real_escape_string($conn, $_POST['vendor_email']);
-    $vendor_contact = mysqli_real_escape_string($conn, $_POST['vendor_contact']);
-    $sdm_name = mysqli_real_escape_string($conn, $_POST['sdm_name']);
-    $sdm_email = mysqli_real_escape_string($conn, $_POST['sdm_email']);
-    $sdm_contact = mysqli_real_escape_string($conn, $_POST['sdm_contact']);
+    $vendor_id = mysqli_real_escape_string($conn, $_POST['vendor_id']);
+    $sdm_id = mysqli_real_escape_string($conn, $_POST['sdm_id']);
     $remarks = mysqli_real_escape_string($conn, $_POST['remarks']); //Insert rest into expiration
     $expirationDateArray = explode('/', $_POST['expiration_date']);
     $expiration_date = $expirationDateArray[2] . '-' . $expirationDateArray[0] . '-' . $expirationDateArray[1];
@@ -222,27 +217,6 @@ if (isset($_POST['create_contract'])) {
     if (mysqli_num_rows($check_contract_result) > 0) {
         echo "<script>alert('Contract already exists in this category.');</script>";
     } else {
-        // Insert vendor and SDM details and get their IDs
-        $insert_vendor = "INSERT INTO vendor(contact_name, email, phone_no) VALUES ('$vendor_name','$vendor_email', '$vendor_contact')";
-        mysqli_query($conn, $insert_vendor);
-        $vendor_id = mysqli_insert_id($conn);
-
-        $insert_sdm = "INSERT INTO service_delivery_manager(name, email, phone_no) VALUES ('$sdm_name','$sdm_email', '$sdm_contact')";
-        mysqli_query($conn, $insert_sdm);
-        $sdm_id = mysqli_insert_id($conn);
-
-        // After inserting data into vendor and service_delivery_manager tables
-
-        // Insert vendor information into combined_users
-        $insert_vendor_info = "INSERT INTO view_all_users (name, email, contact_name, contact_phone, role_id, type)
-VALUES ('$vendor_name', '$vendor_email', '$vendor_email', '$vendor_contact', 2, 'vendor')";
-        mysqli_query($conn, $insert_vendor_info);
-
-        // Insert service delivery manager information into combined_users
-        $insert_sdm_info = "INSERT INTO view_all_users (name, email, contact_phone, role_id, type)
-VALUES ('$sdm_name', '$sdm_email', '$sdm_contact', 3, 'sdm')";
-        mysqli_query($conn, $insert_sdm_info);
-
         // Insert expiration details
         $insert_expiration = "INSERT INTO expiration(contract_no, date, renewal_provision_id, termination_rights, assignment_provision, notified) VALUES ('$reference_num','$expiration_date', '$renewal_provision', '$termination_provision', '$assignment_provision',0)";
         mysqli_query($conn, $insert_expiration);
@@ -260,6 +234,5 @@ VALUES ('$sdm_name', '$sdm_email', '$sdm_contact', 3, 'sdm')";
             echo "<script>window.open('index.php?new_contract','_self')</script>";
         }
     }
-
 }
 ?>

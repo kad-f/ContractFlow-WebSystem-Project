@@ -51,8 +51,10 @@ $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
                     echo "<td>" . ($row['email'] ?? 'N/A') . "</td>";
                     echo "<td>" . ($row['contact_phone'] ?? 'N/A') . "</td>";
                     echo "<td>" . ($row['type'] ?? 'N/A') . "</td>";
-                    echo "<td><a href='edit_user.php?type=" . ($row['UserType'] ?? '') . "&id=" . ($row['ID'] ?? '') . "'>Edit</a></td>";
-                    echo "<td><a href='delete_user.php?type=" . ($row['UserType'] ?? '') . "&id=" . ($row['ID'] ?? '') . "'>Delete</a></td>";
+                   if ($_SESSION['role_id'] != 2) { // Assuming 2 is the role_id for Vendor
+                        echo "<td><a href='edit_user.php?type=" . ($row['UserType'] ?? '') . "&id=" . ($row['ID'] ?? '') . "'>Edit</a></td>";
+                        echo "<td><a href='delete_user.php?type=" . ($row['UserType'] ?? '') . "&id=" . ($row['ID'] ?? '') . "'>Delete</a></td>";
+                    }
                     echo "</tr>";
                 }
                 ?>

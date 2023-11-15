@@ -43,15 +43,16 @@ if (isset($_SESSION['logged']) != true) {
 if (isset($_POST['add_user'])) {
     $user_name = mysqli_real_escape_string($conn, $_POST['user_name']);
     $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
-    $role_id = $_POST['role_id']; // assuming this comes from a select input in your form
+    $role_id = $_POST['role_id']; 
 
     // Set default password based on role
     $default_password = $role_id == 2 ? "vendor123" : "sdm123";
-    $hashed_password = password_hash($default_password, PASSWORD_DEFAULT);
 
     $insert_user = "INSERT INTO users (name, email, password, role_id) VALUES (?, ?, ?, ?)";
     $stmt_user = mysqli_prepare($conn, $insert_user);
-    mysqli_stmt_bind_param($stmt_user, "sssi", $user_name, $user_email, $hashed_password, $role_id);
+    // Use $default_password directly instead of $hashed_password
+    mysqli_stmt_bind_param($stmt_user, "sssi", $user_name, $user_email, $default_password, $role_id);
+    
 
     if (mysqli_stmt_execute($stmt_user)) {
         $user_id = mysqli_insert_id($conn);

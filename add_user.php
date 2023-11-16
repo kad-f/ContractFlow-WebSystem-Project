@@ -1,5 +1,5 @@
 <h1 style="text-align: left; padding-left: 5%;">Add User</h1>
-<div class="form-container">
+<div class="form-container"  style="background-color: yellow; color: #000;">
     <form method="post" action="index.php?add_user" enctype="multipart/form-data" id="form">
         <fieldset>
             <legend>User Details</legend>

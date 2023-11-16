@@ -9,7 +9,7 @@ error_reporting(E_ALL);
     }
 ?>
 <h1 style="text-align: left; padding-left: 5%;">Attach An Invoice </h1>
-<div class="form-container">
+<div class="form-container" style="background-color: yellow; color: #000;">
     <form method="post" action="index.php?attach_invoice" enctype="multipart/form-data" id="form">
         <fieldset>
             <legend>Invoice Details</legend>
@@ -43,7 +43,8 @@ error_reporting(E_ALL);
                         <input type="text" name="invoice_date" id="datepicker">
                     </li>
                     <li>
-                        <input type="submit" name="Invoice-Form" >
+        
+                        <button type="submit" name="Invoice-Form">SUBMIT</button>
                     </li>
                 </ul>
 

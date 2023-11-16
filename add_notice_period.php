@@ -5,7 +5,7 @@ if (isset($_SESSION['logged']) != true) {
 }
 ?>
 <h1 style="text-align: left; padding-left: 5%;">Add Notice Period</h1>
-<div class="form-container">
+<div class="form-container"  style="background-color: yellow; color: #000;">
     <form method="post" action="index.php?add_notice_period" enctype="multipart/form-data" id="form">
         <fieldset>
             <legend>Notice Details</legend>
@@ -25,7 +25,7 @@ if (isset($_SESSION['logged']) != true) {
                         placeholder="Enter Notice description here"></textarea>
                 </li>
                 <li>
-                    <input type="submit" name="add_notice">
+                    <button type="submit" name="add_notice">SUBMIT</button>
                 </li>
             </ul>
         </fieldset>

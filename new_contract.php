@@ -9,7 +9,7 @@ if (isset($_SESSION['logged']) != "true") {
 include('update_notifications.php');
 ?>
 <h1 style="text-align: left; padding-left: 5%;">Add New Contract</h1>
-<div class="form-container">
+<div class="form-container" style="background-color: yellow; color: #000;">
     <form method="post" action="index.php?new_contract" enctype="multipart/form-data" id="form">
         <fieldset>
             <legend>Contract Details</legend>
@@ -178,7 +178,7 @@ include('update_notifications.php');
                     <input type="text" id="assignment_provision" name="assignment_provision" placeholder="Assignment Provision">
                 </li>
                 <li>
-                    <input type="submit" name="create_contract">
+                    <button type="submit" name="create_contract">SUBMIT</button>
                 </li>
             </ul>
         </fieldset>
@@ -225,7 +225,7 @@ if (isset($_POST['create_contract'])) {
 
         // Insert contract details
         $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, sdm_remarks, annual_spend, payment_type, payment_terms, status, expiration_id, created_at) VALUES ('$reference_num', '$contract_type', '$category', '$description', '$date', '$supplier', '$life', '$vendor_id', '$sdm_id', '$remarks', '$spend', '$payment_type', '$terms', '$status', '$expiration_id', '$created_at')";
-    $result_contract = mysqli_query($conn, $insert_contract);
+        $result_contract = mysqli_query($conn, $insert_contract);
 
         if ($result_contract) {
             // Add notification

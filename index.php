@@ -80,9 +80,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 			<ul>
 
 				<li class="cd-label">Main</li>
-				<li class="has-children overview">
-					<a href="index.php?dashboard">Dashboard</a>
-				</li>
+				
 				<li class="has-children overview">
 					<?php if ($roleID == 1 || $roleID == 3) : ?>
 						<a href="#0">Manage Contracts</a>

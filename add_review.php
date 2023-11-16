@@ -8,7 +8,7 @@ if (isset($_SESSION['logged']) != "true") {
 ?>
 
 <h1 style="text-align: left; padding-left: 5%;">Add Review</h1>
-<div class="form-container">
+<div class="form-container"  style="background-color: yellow; color: #000;">
     <form method="post" action="index.php?add_review" enctype="multipart/form-data" id="form">
         <fieldset>
             <legend>Review Details</legend>
@@ -31,7 +31,7 @@ if (isset($_SESSION['logged']) != "true") {
                     <textarea rows="6" name="comments" id="comments" placeholder="Enter Comments here"></textarea>
                 </li>
                 <li>
-                    <input type="submit" name="add_notice">
+                    <button type="submit" name="add_notice">SUBMIT</button>
                 </li>
             </ul>
         </fieldset>

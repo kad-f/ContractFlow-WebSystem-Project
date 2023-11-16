@@ -151,6 +151,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 					<ul>
 						<?php if ($roleID == 1 || $roleID == 3) : ?>
 							<li><a href="index.php?add_notice_period">Add Notice Period</a></li>
+							<li><a href="index.php?view_all_notices">View All</a></li>
 						<?php endif; ?>
 						<?php if ($roleID == 2) : ?>
 							<li><a href="index.php?view_all_notices">View All</a></li>

@@ -34,9 +34,8 @@ if (!$category_id) {
 
         .contract-card {
             max-width: 90%;
-            /* Adjusted for responsiveness */
             margin: 0 auto;
-            background-color: #fff;
+            background-color: yellow;
             border: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);

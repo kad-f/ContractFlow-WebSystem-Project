@@ -1,3 +1,9 @@
+<style>
+	th {
+		background-color: yellow;
+		color: #000;
+	}
+</style>
 <div id="page-wrap">
 	<h1>All Reviews</h1>
 	<table>

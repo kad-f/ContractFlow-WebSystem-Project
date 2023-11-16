@@ -26,7 +26,12 @@ $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All Users</title>
 </head>
-
+<style>
+	th {
+		background-color: yellow;
+		color: #000;
+	}
+</style>
 <body>
     <div id="page-wrap">
         <h1>All Users</h1>

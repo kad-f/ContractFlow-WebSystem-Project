@@ -73,7 +73,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 				</li>
 			</ul>
 		</nav>
-	</header> <!-- .cd-main-header -->
+	</header>
 
 	<main class="cd-main-content">
 		<nav class="cd-side-nav">

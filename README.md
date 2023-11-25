@@ -44,7 +44,8 @@ Contributing
 # Contributions are welcome! If you'd like to contribute to the project, please follow the contribution guidelines outlined in the CONTRIBUTING.md file.
 
 # License
-This project is licensed under the # Keyan Andy Delgado Fajanoy
+This project is licensed under the 
+# Keyan Andy Delgado Fajanoy
 
 # Acknowledgments
 Special thanks to contributors who have dedicated their time and effort to this project.

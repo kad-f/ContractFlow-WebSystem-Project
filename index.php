@@ -82,7 +82,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 				<li class="cd-label">Main</li>
 
 				<li class="has-children overview">
-					<?php if ($roleID == 1 || $roleID == 3): ?>
+					<?php if ($roleID == 1 || $roleID == 3) : ?>
 						<a href="#0">Manage Contracts</a>
 						<ul>
 							<li><a href="index.php?new_contract">Add New Contract</a></li>
@@ -92,7 +92,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 							<li><a href="index.php?view_contract&category_id=3">IT Support and Maintenance</a></li>
 						</ul>
 					<?php endif; ?>
-					<?php if ($roleID == 2): ?>
+					<?php if ($roleID == 2) : ?>
 						<a href="#0">Manage Contracts</a>
 						<ul>
 							<li><a href="index.php?view_contract&category_id=1">Hardware and Software Services</a></li>
@@ -149,11 +149,11 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 					<a href="#0">Notice Periods</a>
 
 					<ul>
-						<?php if ($roleID == 1 || $roleID == 3): ?>
+						<?php if ($roleID == 1 || $roleID == 3) : ?>
 							<li><a href="index.php?add_notice_period">Add Notice Period</a></li>
 							<li><a href="index.php?view_all_notices">View All</a></li>
 						<?php endif; ?>
-						<?php if ($roleID == 2): ?>
+						<?php if ($roleID == 2) : ?>
 							<li><a href="index.php?view_all_notices">View All</a></li>
 						<?php endif; ?>
 					</ul>
@@ -162,13 +162,13 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 				<li class="has-children bookmarks">
 					<a href="#0">Users</a>
 					<ul>
-						<?php if ($roleID == 1 || $roleID == 3): ?>
+						<?php if ($roleID == 1 || $roleID == 3) : ?>
 							<li><a href="index.php?view_all_users">View All Users</a></li>
 						<?php endif; ?>
-						<?php if ($roleID == 1): ?>
+						<?php if ($roleID == 1) : ?>
 							<li><a href="index.php?add_user">Add User</a></li>
 						<?php endif; ?>
-						<?php if ($roleID == 2): ?>
+						<?php if ($roleID == 2) : ?>
 							<li><a href="index.php?view_all_users">View All Users</a></li>
 						<?php endif; ?>
 					</ul>
@@ -185,7 +185,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
 			<ul>
 				<li class="cd-label">Invoice Management</li>
-				<?php if ($roleID == 1 || $roleID == 3): ?>
+				<?php if ($roleID == 1 || $roleID == 3) : ?>
 					<li class="has-children bookmarks">
 						<a href="index.php?attach_invoice">Attach an Invoice</a>
 					</li>
@@ -209,36 +209,57 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 			<?php
 			if (isset($_GET['new_contract'])) {
 				include("new_contract.php");
-			} else if (isset($_GET['view_contract'])) {
-				// Check if the 'category_id' parameter is set
-				if (isset($_GET['category_id'])) {
-					$category_id = $_GET['category_id'];
-					// Include JavaScript and AJAX to fetch and display 'view_contract' content for a specific category
-					?>
+			} else // ... (previous code remains unchanged)
+
+				if (isset($_GET['view_contract'])) {
+					// Check if the 'category_id' parameter is set
+					if (isset($_GET['category_id'])) {
+						$category_id = $_GET['category_id'];
+
+						// Query to check if there are contracts in the specified category
+						$check_contract_query = "SELECT COUNT(*) as count FROM contract WHERE category_id = '$category_id'";
+						$check_result = $conn->query($check_contract_query);
+
+						if ($check_result === false) {
+							die("Error in SQL query: " . $conn->error);
+						}
+
+						$contract_count = $check_result->fetch_assoc()['count'];
+
+						if ($contract_count > 0) {
+							// Include JavaScript and AJAX to fetch and display 'view_contract' content for a specific category
+			?>
 						<div id="dynamic-content"></div>
 						<script>
-							$(document).ready(function () {
+							$(document).ready(function() {
 								$.ajax({
 									type: 'GET',
 									url: 'view_contract.php?category_id=<?= $category_id ?>',
-									success: function (data) {
+									success: function(data) {
 										$('#dynamic-content').html(data);
 									},
-									error: function () {
+									error: function() {
 										$('#dynamic-content').html('<p>Error loading content.</p>');
 									}
 								});
 							});
 						</script>
-					<?php
-				} else {
-					echo '<p>No category specified for view_contract.</p>';
+			<?php
+						} else {
+							
+							echo '<br><p>No contracts available in this category.</p>';
+						}
+					} else {
+						echo '<p>No category specified for view_contract.</p>';
+					}
 				}
-			} else if (isset($_GET['add_notice_period'])) {
-				include("add_notice_period.php");
-			} else if (isset($_GET['add_user'])) {
-				include("add_user.php");
-			}
+
+				// ... (remaining code remains unchanged)
+				else if (isset($_GET['add_notice_period'])) {
+					include("add_notice_period.php");
+				} else if (isset($_GET['add_user'])) {
+					include("add_user.php");
+				}
 			if (isset($_GET['view_all_notices'])) {
 				include("view_all_notices.php");
 			}
@@ -284,21 +305,21 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 	<script src="js/jquery.menu-aim.js"></script>
 	<script src="js/main.js"></script> <!-- Resource jQuery -->
 	<script>
-		$(function () {
+		$(function() {
 			$("#datepicker").datepicker();
 		});
-		$(function () {
+		$(function() {
 			$("#e-datepicker").datepicker();
 		});
-		$(document).ready(function () {
+		$(document).ready(function() {
 			$.ajax({
 				type: 'GET',
 				url: 'view_contract.php?category_id=<?php echo $category_id; ?>',
-				success: function (data) {
+				success: function(data) {
 					console.log(data); // Log the received data to the console
 					$('#dynamic-content').html(data);
 				},
-				error: function (xhr, status, error) {
+				error: function(xhr, status, error) {
 					console.error(xhr.responseText); // Log any errors to the console
 				}
 			});

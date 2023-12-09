@@ -43,8 +43,6 @@ $users = mysqli_fetch_all($result, MYSQLI_ASSOC);
                     <th>Email</th>
                     <th>Contact Phone</th>
                     <th>Role</th>
-                    <th>Edit</th>
-                    <th>Remove</th>
                 </tr>
             </thead>
             <tbody>

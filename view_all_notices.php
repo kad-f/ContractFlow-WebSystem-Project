@@ -4,6 +4,7 @@
 		color: #000;
 	}
 </style>
+
 <div id="page-wrap">
 	<h1>All Notices</h1>
 	<table>
@@ -22,20 +23,27 @@
 			// Assuming you have the user's information in the session
 			$user_id = $_SESSION['id'];
 			$user_role_id = $_SESSION['role_id'];
+
+			// Initialize $get_notice
+			$get_notice = '';
+
 			if ($user_role_id == 1) {
-				$get_notice = "SELECT contract.contract_no, contract.vendor_id, notice_period.*
-						FROM notice_period
-						JOIN contract ON notice_period.contract_no = contract.contract_no";
-			}
-
-
-			// Check if the user is not an admin
-			if ($user_role_id != 1 && $user_role_id != 3) {
-				$get_notice .= " WHERE contract.vendor_id = '$user_id'";
+				// Admin can see all notices
+				$get_notice = "SELECT * from notice_period";
+			} else {
+				// Vendor can only see their own notices
+				$get_notice = "SELECT notice_period.*
+                               FROM notice_period
+                               JOIN contract ON notice_period.contract_no = contract.contract_no
+                               WHERE contract.vendor_id = '$user_id'";
 			}
 
 			$result_notice = mysqli_query($conn, $get_notice);
 			$i = 0;
+
+			if (!$result_notice) {
+				die("Query failed: " . mysqli_error($conn) . " - SQL: " . $get_notice);
+			}
 
 			if (mysqli_num_rows($result_notice) == 0) {
 				echo "<td>No Notice Periods found.</td>";

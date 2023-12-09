@@ -24,10 +24,12 @@ if (!$category_id) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contract Details</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.css" integrity="sha256-FdyAql1EZKZDSuNtIe2L0+fm1V/D7YdzrbzN+j8B8sE=" crossorigin="anonymous" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-oLME3iI72w26o0NSNJ3qVFqbrXRI2owPhcE4rL+1/RM=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" integrity="sha256-T3YlP0f8w+3Q/Gbfk9Z4Yb05pFypIjBAs/Y4nbk6UU8=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.10.2/fullcalendar.min.js" integrity="sha256-C/dZc9l16R+H2LrwJDmr/3lc9r7l6lmpC6N1Z+8yCZ0=" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 
 
     <style>
@@ -79,7 +81,37 @@ if (!$category_id) {
             margin-bottom: 5px;
         }
 
+        #calendar {
+            flex: 0 0 48%;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
 
+        .Complete {
+            background-color: yellowgreen;
+            /* Adjust the color based on your needs */
+        }
+
+        .Delayed {
+            background-color: orange;
+        }
+
+        .NotDelivered {
+            background-color: red;
+        }
+
+        .Expired {
+            background-color: black;
+        }
+
+        .default {
+            background-color: gray;
+            /* Default color for other statuses */
+        }
 
         @media only screen and (max-width: 600px) {
             .contract-card {
@@ -116,7 +148,7 @@ if (!$category_id) {
         function getStatusColor($status)
         {
             $statusColors = [
-                'Delivered' => 'green',
+                'Delivered' => 'yellow-green',
                 'Delayed' => 'orange',
                 'Not Delivered' => 'red',
                 'Expired' => 'black',
@@ -165,24 +197,29 @@ if (!$category_id) {
         ];
 
         $events = []; // Initialize the $events array
+
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                $startAgreement = $row['date_of_agreement'];
-                $endAgreement = $row['expiration_id'];
+                $startAgreement = $row['created_at'];
+                $endAgreement = $row['date']; // Use 'expiration_date' instead of 'expiration_id'
                 $status = $row['status'];
+
+                // Convert the date strings to ISO8601 format with explicit time format
+                $isoStartDate = date('Y-m-d H:i A', strtotime($startAgreement));
+                $isoEndDate = date('Y-m-d H:i A', strtotime($endAgreement));
 
                 // Event for date_of_agreement with color based on status
                 $events[] = [
-                    'title' => 'Date of Agreement: ' . $row['contract_no'],
-                    'start' => $startAgreement,
-                    'color' => getStatusColor($status),
+                    'title' => 'Created Date',
+                    'start' => $isoStartDate,
+                    'className' => $status,
                 ];
 
                 // Event for expiration_date with color based on status
                 $events[] = [
-                    'title' => 'Expiration Date: ' . $row['expiration_id'],
-                    'start' => $endAgreement,
-                    'color' => getStatusColor($status),
+                    'title' => 'Expiration Date',
+                    'start' => $isoEndDate,
+                    'className' => $status,
                 ];
         ?>
 
@@ -251,8 +288,7 @@ if (!$category_id) {
         }
 
         ?>
-        <!-- Calendar container -->
-        <div id='calendar'></div>
+        <div id="calendar"></div>
     </div>
     <script>
         var statusColors = <?php echo json_encode($statusColors); ?>;
@@ -264,14 +300,46 @@ if (!$category_id) {
         $(document).ready(function() {
             $('#calendar').fullCalendar({
                 header: {
-                    left: 'prev,next today',
+                    left: 'month, agendaWeek, agendaDay, list',
                     center: 'title',
-                    right: 'month,agendaWeek,agendaDay'
+                    right: 'prev, today, next'
+                },
+                footer: {
+                    left: 'month, agendaWeek, agendaDay, list',
+                    center: 'title',
+                    right: 'prev, today, next'
+                },
+                buttonText: {
+                    today: 'Today',
+                    month: 'Month',
+                    week: 'Week',
+                    day: 'Day',
+                    list: 'List'
                 },
                 events: <?php echo json_encode($events); ?>,
                 eventRender: function(event, element) {
-                    element.css('background-color', getStatusColor(event.color));
+                    // Set the background color directly using the class name
+                    element.css('background-color', getStatusColor(event.className));
+                    // Show the description as a tooltip
+                    element.attr('title', event.description);
                 },
+                dayRender: function(date, cell) {
+                    var dateString = date.format('YYYY-MM-DD');
+                    var createdEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
+                        return event.title === 'Created Date' && event.start.format('YYYY-MM-DD') === dateString;
+                    });
+
+                    var expirationEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
+                        return event.title === 'Expiration Date' && event.start.format('YYYY-MM-DD') === dateString;
+                    });
+
+                    if (createdEvents.length > 0) {
+                        cell.css('background-color', 'yellowgreen');
+                    } else if (expirationEvents.length > 0) {
+                        cell.css('background-color', 'red');
+                    }
+                },
+                timeFormat: 'h:mm A',
             });
         });
     </script>

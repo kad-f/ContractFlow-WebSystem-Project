@@ -6,37 +6,51 @@ if (isset($_SESSION['logged']) != "true") {
     die();
 }
 ?>
+<!DOCTYPE html>
+<html lang="en">
 
-<h1 style="text-align: left; padding-left: 5%;">Add Review</h1>
-<div class="form-container"  style="background-color: yellow; color: #000;">
-    <form method="post" action="index.php?add_review" enctype="multipart/form-data" id="form">
-        <fieldset>
-            <legend>Review Details</legend>
-            <ul class="form-flex-outer">
-                <li>
-                    <label for="contract-num">Contract No.</label>
-                    <input type="text" id="contract-num" name="contract-num"
-                        placeholder="Enter contract reference number here">
-                </li>
-                <li>
-                    <label for="reviewer">Reviewer</label>
-                    <input type="text" id="reviewer" name="reviewer" placeholder="Enter reviewer name here">
-                </li>
-                <li>
-                    <label for="datepicker">Review Date</label>
-                    <input type="text" name="review_date" id="datepicker">
-                </li>
-                <li>
-                    <label for="comments">Comments</label>
-                    <textarea rows="6" name="comments" id="comments" placeholder="Enter Comments here"></textarea>
-                </li>
-                <li>
-                    <button type="submit" name="add_notice">SUBMIT</button>
-                </li>
-            </ul>
-        </fieldset>
-    </form>
-</div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add review</title>
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+</head>
+
+<body>
+    <h1 style="text-align: left; padding-left: 5%;">Add Review</h1>
+    <div class="form-container" style="background-color: yellow; color: #000;">
+        <form method="post" action="index.php?add_review" enctype="multipart/form-data" id="form">
+            <fieldset>
+                <legend>Review Details</legend>
+                <ul class="form-flex-outer">
+                    <li>
+                        <label for="contract-num">Contract No.</label>
+                        <input type="text" id="contract-num" name="contract-num" placeholder="Enter contract reference number here">
+                    </li>
+                    <li>
+                        <label for="reviewer">Reviewer</label>
+                        <input type="text" id="reviewer" name="reviewer" placeholder="Enter reviewer name here">
+                    </li>
+                    <li>
+                        <label for="datepicker">Review Date</label>
+                        <input type="text" name="review_date" id="datepicker">
+                    </li>
+                    <li>
+                        <label for="comments">Comments</label>
+                        <textarea rows="6" name="comments" id="comments" placeholder="Enter Comments here"></textarea>
+                    </li>
+                    <li>
+                        <button type="submit" name="add_notice">SUBMIT</button>
+                    </li>
+                </ul>
+            </fieldset>
+        </form>
+    </div>
+</body>
+
+</html>
+
 
 <?php
 if (isset($_POST['add_notice'])) {

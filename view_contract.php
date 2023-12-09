@@ -27,7 +27,7 @@ if (!$category_id) {
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css"></script>
@@ -153,7 +153,7 @@ if (!$category_id) {
         function getStatusColor($status)
         {
             $statusColors = [
-                'Delivered' => 'yellow-green',
+                'Delivered' => 'yellowgreen',
                 'Delayed' => 'orange',
                 'Not Delivered' => 'red',
                 'Expired' => 'black',
@@ -198,7 +198,7 @@ if (!$category_id) {
             'Delayed' => 'orange',
             'Not Delivered' => 'red',
             'Expired' => 'black',
-            'default' => 'gray', // Default color for other statuses
+            'default' => '', // Default color for other statuses
         ];
 
         $events = []; // Initialize the $events array
@@ -226,6 +226,7 @@ if (!$category_id) {
                     'start' => $isoEndDate,
                     'className' => $status,
                 ];
+                $contractNumber = $row['contract_no'];
         ?>
 
                 <div class="contract-field">
@@ -285,133 +286,179 @@ if (!$category_id) {
                     <?php echo $row['date']; ?>
                 </div>
 
+                <div class="modal fade" id="eventFormModal" tabindex="-1" role="dialog" aria-labelledby="eventFormModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" aria-label="Close" onclick="closeEventFormModal()">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
 
-        <?php
+                                <h4 class="modal-title" id="eventFormModalLabel">Update Contract Status</h4>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Event Form -->
+                                <form method="post" action="update_status.php" id="eventForm_<?php echo $contractNumber; ?>" a>
+                                    <div class="form-group">
+                                        <label for="status">Select Status:</label>
+                                        <select class="form-control" id="status" name="status" required>
+                                            <option value="Complete">Complete</option>
+                                            <option value="Delivered">Delivered</option>
+                                            <option value="Delayed">Delayed</option>
+                                            <option value="Not Delivered">Not Delivered</option>
+                                            <option value="Expired">Expired</option>
+                                        </select>
+                                    </div>
+                                    <input type="hidden" id="contractId_<?php echo $contractNumber; ?>" name="contractId" value="<?php echo $contractNumber; ?>">
+                                    <br>
+                                    <button type="submit" class="btn btn-primary" onclick="updateContractStatus()">Update Status</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+            <?php
             }
         } else {
             echo "<div class='no-contract-message'>No contracts available in this category.</div>";
         }
 
-        ?>
-        <div class="modal fade" id="eventFormModal" tabindex="-1" role="dialog" aria-labelledby="eventFormModalLabel">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                        <h4 class="modal-title" id="eventFormModalLabel">Update Contract Status</h4>
-                    </div>
-                    <div class="modal-body">
-                        <!-- Event Form -->
-                        <form id="eventForm">
-                            <div class="form-group">
-                                <label for="status">Select Status:</label>
-                                <select class="form-control" id="status" name="status" required>
-                                    <option value="Complete">Complete</option>
-                                    <option value="Delayed">Delayed</option>
-                                    <option value="Not Delivered">Not Delivered</option>
-                                    <option value="Expired">Expired</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="remarks">Remarks:</label>
-                                <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
-                            </div>
-                            <input type="hidden" id="contractId" name="contractId" value="">
-                            <button type="button" class="btn btn-primary" onclick="updateContractStatus()">Update Status</button>
-                        </form>
-                    </div>
+            ?>
+
                 </div>
-            </div>
-        </div>
-        <div id="calendar"></div>
+                <div id="calendar"></div>
     </div>
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        // Function to open the event form modal
-        function openEventForm(contractId) {
-            $('#contractId').val(contractId);
-            $('#eventFormModal').modal('show');
-        }
-
-        // Function to update contract status
-        function updateContractStatus() {
-            var status = $('#status').val();
-            var remarks = $('#remarks').val();
-            var contractId = $('#contractId').val();
-
-            // You can perform an AJAX request here to update the status in the database
-            // For simplicity, we'll just log the data to the console
-            console.log('Contract ID: ' + contractId);
-            console.log('Status: ' + status);
-            console.log('Remarks: ' + remarks);
-
-            // Close the modal after updating
-            $('#eventFormModal').modal('hide');
-        }
-    </script>
-    <script>
-        var statusColors = <?php echo json_encode($statusColors); ?>;
-        var calendarInitialized = false; // Flag to track whether the calendar has been initialized
-
-        function getStatusColor(status) {
-            return statusColors[status] || statusColors['default'];
-        }
-
         $(document).ready(function() {
-            // Check if the calendar has already been initialized
-            if (!calendarInitialized) {
-                $('#calendar').fullCalendar({
-                    customButtons: {
-                        openEventFormButton: {
-                            text: 'Open Event Form',
-                            click: function() {
-                                openEventForm(); // Call your function to open the modal here
-                            }
+            var statusColors = <?php echo json_encode($statusColors); ?>;
+            var calendarInitialized = false;
+
+
+            function getStatusColor(status) {
+                return statusColors[status] || statusColors['default'];
+            }
+
+            function openEventForm() {
+                var contractId = 'contract_no';
+
+                // Log the contractId to the console for debugging
+                console.log('Contract ID:', contractId);
+                var contractId = 'contract_no';
+                $('#contractId').val(contractId);
+                $('#eventFormModal').modal('show');
+
+            }
+
+
+            function closeEventFormModal() {
+                $('#eventFormModal').modal('hide');
+            }
+
+            function updateContractStatus() {
+                var status = $('#status').val();
+                var contractId = $('#contractId').val();
+
+                $.ajax({
+                    url: 'update_status.php',
+                    type: 'POST',
+                    data: {
+                        contractId: contractId,
+                        status: status,
+                        remarks: remarks
+                    },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            // Update the calendar with the new status
+                            updateCalendarStatus(contractId, status);
+                            // Close the modal after updating
+                            $('#eventFormModal').modal('hide');
+                        } else {
+                            // Handle the error (you may show an alert or log it to the console)
+                            console.error('Error updating status:', response.error);
                         }
                     },
+                    error: function(xhr, status, error) {
+                        // Handle the AJAX error (you may show an alert or log it to the console)
+                        console.error('AJAX Error:', error);
+                    }
+                });
+            }
+
+            // Function to update the calendar with the new status
+            function updateCalendarStatus(contractId, status) {
+                var eventClassName = getStatusColor(status);
+                var calendarEvent = {
+                    'title': 'Updated Status',
+                    'start': moment().format('Y-MM-DD H:mm A'), // Update with the current date and time
+                    'className': eventClassName
+                };
+                $('#calendar').fullCalendar('renderEvent', calendarEvent);
+            }
+
+            if (!calendarInitialized) {
+                $('#calendar').fullCalendar({
                     header: {
                         left: 'month, agendaWeek, agendaDay, list',
                         center: 'title',
-                        right: 'prev, today, next'
+                        right: 'prev, today, next , openEventFormButton',
                     },
                     buttonText: {
                         today: 'Today',
                         month: 'Month',
                         week: 'Week',
                         day: 'Day',
-                        list: 'List'
+                        list: 'List',
                     },
                     events: <?php echo json_encode($events); ?>,
                     eventRender: function(event, element) {
-                        // Set the background color directly using the class name
                         element.css('background-color', getStatusColor(event.className));
-                        // Show the description as a tooltip
                         element.attr('title', event.description);
                     },
                     dayRender: function(date, cell) {
                         var dateString = date.format('YYYY-MM-DD');
-                        var createdEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
+                        var createdDateEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
                             return event.title === 'Created Date' && event.start.format('YYYY-MM-DD') === dateString;
                         });
-
-                        var expirationEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
+                        var expirationDateEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
                             return event.title === 'Expiration Date' && event.start.format('YYYY-MM-DD') === dateString;
                         });
 
-                        if (createdEvents.length > 0) {
-                            cell.css('background-color', 'yellowgreen');
-                        } else if (expirationEvents.length > 0) {
+                        if (expirationDateEvents.length > 0) {
+                            cell.html("<strong>Expiration Date: </strong>" + expirationDateEvents[0].className);
+                        } else if (createdDateEvents.length > 0) {
+                            cell.html("<strong>Created Date: </strong>" + createdDateEvents[0].className);
+                        } else {
+                            cell.html("<strong>No events</strong>");
+                        }
+
+                        // Set background color based on status
+                        if (expirationDateEvents.length > 0 && cell.css('background-color') !== 'red') {
                             cell.css('background-color', 'red');
+                        } else if (createdDateEvents.length > 0) {
+                            cell.css('background-color', statusColors[createdDateEvents[0].className]);
+                        } else {
+                            cell.css('background-color', statusColors['default']);
                         }
                     },
                     timeFormat: 'h:mm A',
+                    customButtons: {
+                        openEventFormButton: {
+                            text: 'Open Event Form',
+                            click: function() {
+                                openEventForm();
+                            }
+                        }
+                    },
                 });
 
-                calendarInitialized = true; // Set the flag to true after initialization
+                calendarInitialized = true;
             }
         });
     </script>
+
+
 </body>
 
 </html>

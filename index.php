@@ -201,7 +201,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
 			<ul>
 				<li class="cd-label">Action</li>
-				<li class="action-btn"><a href="#0" class="yellow-button">+ Submit an Issue</a></li>
+				<li class="action-btn"><a href="index.php?submit_issue" class="yellow-button">+ Submit an Issue</a></li>
 			</ul>
 
 		</nav>
@@ -289,8 +289,11 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 			if (isset($_GET['attach_invoice'])) {
 				include("attach_invoice.php");
 			}
-			if(isset($_GET['invoice_details'])) {
+			if (isset($_GET['invoice_details'])) {
 				include('invoice_details.php');
+			}
+			if (isset($_GET['submit_issue'])) {
+				include('submit_issue.php');
 			}
 			if (isset($_GET['logout'])) {
 				include("logout.php");

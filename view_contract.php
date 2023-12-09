@@ -24,12 +24,16 @@ if (!$category_id) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contract Details</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.min.css"></script>
+
+    <!-- ... (your existing scripts) -->
 
 
     <style>
@@ -37,6 +41,7 @@ if (!$category_id) {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 20px;
             background-color: #f5f5f5;
+            text-decoration: none;
         }
 
         .contract-card {
@@ -288,59 +293,123 @@ if (!$category_id) {
         }
 
         ?>
+        <div class="modal fade" id="eventFormModal" tabindex="-1" role="dialog" aria-labelledby="eventFormModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="eventFormModalLabel">Update Contract Status</h4>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Event Form -->
+                        <form id="eventForm">
+                            <div class="form-group">
+                                <label for="status">Select Status:</label>
+                                <select class="form-control" id="status" name="status" required>
+                                    <option value="Complete">Complete</option>
+                                    <option value="Delayed">Delayed</option>
+                                    <option value="Not Delivered">Not Delivered</option>
+                                    <option value="Expired">Expired</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="remarks">Remarks:</label>
+                                <textarea class="form-control" id="remarks" name="remarks" rows="3"></textarea>
+                            </div>
+                            <input type="hidden" id="contractId" name="contractId" value="">
+                            <button type="button" class="btn btn-primary" onclick="updateContractStatus()">Update Status</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="calendar"></div>
     </div>
     <script>
+        // Function to open the event form modal
+        function openEventForm(contractId) {
+            $('#contractId').val(contractId);
+            $('#eventFormModal').modal('show');
+        }
+
+        // Function to update contract status
+        function updateContractStatus() {
+            var status = $('#status').val();
+            var remarks = $('#remarks').val();
+            var contractId = $('#contractId').val();
+
+            // You can perform an AJAX request here to update the status in the database
+            // For simplicity, we'll just log the data to the console
+            console.log('Contract ID: ' + contractId);
+            console.log('Status: ' + status);
+            console.log('Remarks: ' + remarks);
+
+            // Close the modal after updating
+            $('#eventFormModal').modal('hide');
+        }
+    </script>
+    <script>
         var statusColors = <?php echo json_encode($statusColors); ?>;
+        var calendarInitialized = false; // Flag to track whether the calendar has been initialized
 
         function getStatusColor(status) {
             return statusColors[status] || statusColors['default'];
         }
 
         $(document).ready(function() {
-            $('#calendar').fullCalendar({
-                header: {
-                    left: 'month, agendaWeek, agendaDay, list',
-                    center: 'title',
-                    right: 'prev, today, next'
-                },
-                footer: {
-                    left: 'month, agendaWeek, agendaDay, list',
-                    center: 'title',
-                    right: 'prev, today, next'
-                },
-                buttonText: {
-                    today: 'Today',
-                    month: 'Month',
-                    week: 'Week',
-                    day: 'Day',
-                    list: 'List'
-                },
-                events: <?php echo json_encode($events); ?>,
-                eventRender: function(event, element) {
-                    // Set the background color directly using the class name
-                    element.css('background-color', getStatusColor(event.className));
-                    // Show the description as a tooltip
-                    element.attr('title', event.description);
-                },
-                dayRender: function(date, cell) {
-                    var dateString = date.format('YYYY-MM-DD');
-                    var createdEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
-                        return event.title === 'Created Date' && event.start.format('YYYY-MM-DD') === dateString;
-                    });
+            // Check if the calendar has already been initialized
+            if (!calendarInitialized) {
+                $('#calendar').fullCalendar({
+                    customButtons: {
+                        openEventFormButton: {
+                            text: 'Open Event Form',
+                            click: function() {
+                                openEventForm(); // Call your function to open the modal here
+                            }
+                        }
+                    },
+                    header: {
+                        left: 'month, agendaWeek, agendaDay, list',
+                        center: 'title',
+                        right: 'prev, today, next'
+                    },
+                    buttonText: {
+                        today: 'Today',
+                        month: 'Month',
+                        week: 'Week',
+                        day: 'Day',
+                        list: 'List'
+                    },
+                    events: <?php echo json_encode($events); ?>,
+                    eventRender: function(event, element) {
+                        // Set the background color directly using the class name
+                        element.css('background-color', getStatusColor(event.className));
+                        // Show the description as a tooltip
+                        element.attr('title', event.description);
+                    },
+                    dayRender: function(date, cell) {
+                        var dateString = date.format('YYYY-MM-DD');
+                        var createdEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
+                            return event.title === 'Created Date' && event.start.format('YYYY-MM-DD') === dateString;
+                        });
 
-                    var expirationEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
-                        return event.title === 'Expiration Date' && event.start.format('YYYY-MM-DD') === dateString;
-                    });
+                        var expirationEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
+                            return event.title === 'Expiration Date' && event.start.format('YYYY-MM-DD') === dateString;
+                        });
 
-                    if (createdEvents.length > 0) {
-                        cell.css('background-color', 'yellowgreen');
-                    } else if (expirationEvents.length > 0) {
-                        cell.css('background-color', 'red');
-                    }
-                },
-                timeFormat: 'h:mm A',
-            });
+                        if (createdEvents.length > 0) {
+                            cell.css('background-color', 'yellowgreen');
+                        } else if (expirationEvents.length > 0) {
+                            cell.css('background-color', 'red');
+                        }
+                    },
+                    timeFormat: 'h:mm A',
+                });
+
+                calendarInitialized = true; // Set the flag to true after initialization
+            }
         });
     </script>
 </body>

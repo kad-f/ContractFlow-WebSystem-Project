@@ -19,7 +19,8 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="shortcut icon" href="./favicon/favicon.ico" type="image/x-icon">
 	<link href='https://fonts.googleapis.com/css?family=Open+Sans:300,400,700' rel='stylesheet' type='text/css'>
-
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<script src="bootstrap/js/bootstrap.bundle.min.js"></script>
 	<link rel="stylesheet" href="css/reset.css"> <!-- CSS reset -->
 	<link rel="stylesheet" href="css/normalize.min.css">
 	<script src="node_modules/jquery/dist/jquery.min.js"></script>
@@ -210,22 +211,22 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 			if (isset($_GET['new_contract'])) {
 				include("new_contract.php");
 			} else if (isset($_GET['view_contract'])) {
-					// Check if the 'category_id' parameter is set
-					if (isset($_GET['category_id'])) {
-						$category_id = $_GET['category_id'];
+				// Check if the 'category_id' parameter is set
+				if (isset($_GET['category_id'])) {
+					$category_id = $_GET['category_id'];
 
-						// Query to check if there are contracts in the specified category
-						$check_contract_query = "SELECT COUNT(*) as count FROM contract WHERE category_id = '$category_id'";
-						$check_result = $conn->query($check_contract_query);
+					// Query to check if there are contracts in the specified category
+					$check_contract_query = "SELECT COUNT(*) as count FROM contract WHERE category_id = '$category_id'";
+					$check_result = $conn->query($check_contract_query);
 
-						if ($check_result === false) {
-							die("Error in SQL query: " . $conn->error);
-						}
+					if ($check_result === false) {
+						die("Error in SQL query: " . $conn->error);
+					}
 
-						$contract_count = $check_result->fetch_assoc()['count'];
+					$contract_count = $check_result->fetch_assoc()['count'];
 
-						if ($contract_count > 0) {
-							// Include JavaScript and AJAX to fetch and display 'view_contract' content for a specific category
+					if ($contract_count > 0) {
+						// Include JavaScript and AJAX to fetch and display 'view_contract' content for a specific category
 			?>
 						<div id="dynamic-content"></div>
 						<script>
@@ -243,21 +244,21 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 							});
 						</script>
 			<?php
-						} else {
-
-							echo '<br><p>No contracts available in this category.</p>';
-						}
 					} else {
-						echo '<p>No category specified for view_contract.</p>';
-					}
-				}
 
-				// ... (remaining code remains unchanged)
-				else if (isset($_GET['add_notice_period'])) {
-					include("add_notice_period.php");
-				} else if (isset($_GET['add_user'])) {
-					include("add_user.php");
+						echo '<br><p>No contracts available in this category.</p>';
+					}
+				} else {
+					echo '<p>No category specified for view_contract.</p>';
 				}
+			}
+
+			// ... (remaining code remains unchanged)
+			else if (isset($_GET['add_notice_period'])) {
+				include("add_notice_period.php");
+			} else if (isset($_GET['add_user'])) {
+				include("add_user.php");
+			}
 			if (isset($_GET['view_all_notices'])) {
 				include("view_all_notices.php");
 			}

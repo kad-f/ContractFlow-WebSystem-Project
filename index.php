@@ -133,8 +133,8 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 
 						</span></a>
 					<ul>
-						<li><a href="#0">Expiration</a></li>
-						<li><a href="#0">Notice Period</a></li>
+						<li><a href="">Expiration</a></li>
+						<li><a href="index.php?view_all_notices">Notice Period</a></li>
 					</ul>
 				</li>
 				<li class="has-children comments">
@@ -192,7 +192,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 					</li>
 				<?php endif; ?>
 				<li class="has-children images">
-					<a href="#0">Invoice Details</a>
+					<a href="index.php?invoice_details">Invoice Details</a>
 				</li>
 				<li class="has-children users">
 					<a href="#0">Generate Report</a>
@@ -289,9 +289,13 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 			if (isset($_GET['attach_invoice'])) {
 				include("attach_invoice.php");
 			}
+			if(isset($_GET['invoice_details'])) {
+				include('invoice_details.php');
+			}
 			if (isset($_GET['logout'])) {
 				include("logout.php");
 			}
+
 			if (isset($_GET['view_all_notifications'])) {
 				include("view_all_notifications.php");
 			}

@@ -22,10 +22,12 @@
 			// Assuming you have the user's information in the session
 			$user_id = $_SESSION['id'];
 			$user_role_id = $_SESSION['role_id'];
-
-			$get_notice = "SELECT contract.contract_no, contract.vendor_id, notice_period.*
+			if ($user_role_id == 1) {
+				$get_notice = "SELECT contract.contract_no, contract.vendor_id, notice_period.*
 						FROM notice_period
 						JOIN contract ON notice_period.contract_no = contract.contract_no";
+			}
+
 
 			// Check if the user is not an admin
 			if ($user_role_id != 1 && $user_role_id != 3) {
@@ -49,8 +51,8 @@
 						<td><?php echo $contract_num; ?></td>
 						<td><?php echo $date; ?></td>
 						<td><?php echo $description; ?></td>
-						<td><a href="index.php?edit_notice=<?php echo $id; ?>">Edit</a></td>
-						<td><a href="delete_notice.php?delete_notice=<?php echo $id; ?>">Delete</a></td>
+						<td><a href="index.php?edit_notice=<?php echo $contract_num; ?>">Edit</a></td>
+						<td><a href="delete_notice.php?delete_notice=<?php echo $contract_num; ?>">Delete</a></td>
 					</tr>
 			<?php
 				}

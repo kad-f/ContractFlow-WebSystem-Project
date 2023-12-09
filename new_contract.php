@@ -201,7 +201,6 @@ if (isset($_POST['create_contract'])) {
     $status = mysqli_real_escape_string($conn, $_POST['status']);
     $vendor_id = mysqli_real_escape_string($conn, $_POST['vendor_id']);
     $sdm_id = mysqli_real_escape_string($conn, $_POST['sdm_id']);
-    $remarks = mysqli_real_escape_string($conn, $_POST['remarks']); //Insert rest into expiration
     $expirationDateArray = explode('/', $_POST['expiration_date']);
     $expiration_date = $expirationDateArray[2] . '-' . $expirationDateArray[0] . '-' . $expirationDateArray[1];
     $renewal_provision = mysqli_real_escape_string($conn, $_POST['renewal_provision']);
@@ -224,13 +223,10 @@ if (isset($_POST['create_contract'])) {
         $expiration_id = mysqli_insert_id($conn);
 
         // Insert contract details
-        $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, sdm_remarks, annual_spend, payment_type, payment_terms, status, expiration_id, created_at) VALUES ('$reference_num', '$contract_type', '$category', '$description', '$date', '$supplier', '$life', '$vendor_id', '$sdm_id', '$remarks', '$spend', '$payment_type', '$terms', '$status', '$expiration_id', '$created_at')";
+        $insert_contract = "INSERT INTO contract(contract_no, type_id, category_id, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, sdm_id, annual_spend, payment_type, payment_terms, status, expiration_id, created_at) VALUES ('$reference_num', '$contract_type', '$category', '$description', '$date', '$supplier', '$life', '$vendor_id', '$sdm_id', '$spend', '$payment_type', '$terms', '$status', '$expiration_id', '$created_at')";
         $result_contract = mysqli_query($conn, $insert_contract);
 
         if ($result_contract) {
-            // Add notification
-            $add_notification = "INSERT INTO notification(contract_no, status, notification_text) VALUES ('$reference_num', 0, 'Contract $reference_num Added')";
-            mysqli_query($conn, $add_notification);
 
             echo "<script>window.open('index.php?new_contract','_self')</script>";
         }

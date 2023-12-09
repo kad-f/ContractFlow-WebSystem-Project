@@ -209,9 +209,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 			<?php
 			if (isset($_GET['new_contract'])) {
 				include("new_contract.php");
-			} else // ... (previous code remains unchanged)
-
-				if (isset($_GET['view_contract'])) {
+			} else if (isset($_GET['view_contract'])) {
 					// Check if the 'category_id' parameter is set
 					if (isset($_GET['category_id'])) {
 						$category_id = $_GET['category_id'];
@@ -246,7 +244,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 						</script>
 			<?php
 						} else {
-							
+
 							echo '<br><p>No contracts available in this category.</p>';
 						}
 					} else {
@@ -314,7 +312,7 @@ $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
 		$(document).ready(function() {
 			$.ajax({
 				type: 'GET',
-				url: 'view_contract.php?category_id=<?php echo $category_id; ?>',
+				url: 'view_contract.php?category_id=<?= $category_id ?>',
 				success: function(data) {
 					console.log(data); // Log the received data to the console
 					$('#dynamic-content').html(data);

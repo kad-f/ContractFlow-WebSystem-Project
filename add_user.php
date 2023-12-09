@@ -1,5 +1,5 @@
 <h1 style="text-align: left; padding-left: 5%;">Add User</h1>
-<div class="form-container"  style="background-color: yellow; color: #000;">
+<div class="form-container" style="background-color: yellow; color: #000;">
     <form method="post" action="index.php?add_user" enctype="multipart/form-data" id="form">
         <fieldset>
             <legend>User Details</legend>
@@ -43,7 +43,7 @@ if (isset($_SESSION['logged']) != true) {
 if (isset($_POST['add_user'])) {
     $user_name = mysqli_real_escape_string($conn, $_POST['user_name']);
     $user_email = mysqli_real_escape_string($conn, $_POST['user_email']);
-    $role_id = $_POST['role_id']; 
+    $role_id = $_POST['role_id'];
 
     // Set default password based on role
     $default_password = $role_id == 2 ? "vendor123" : "sdm123";
@@ -52,7 +52,7 @@ if (isset($_POST['add_user'])) {
     $stmt_user = mysqli_prepare($conn, $insert_user);
     // Use $default_password directly instead of $hashed_password
     mysqli_stmt_bind_param($stmt_user, "sssi", $user_name, $user_email, $default_password, $role_id);
-    
+
 
     if (mysqli_stmt_execute($stmt_user)) {
         $user_id = mysqli_insert_id($conn);
@@ -61,9 +61,9 @@ if (isset($_POST['add_user'])) {
         if ($role_id == 2) {
             // Insert into vendor table
             $vendor_contact = mysqli_real_escape_string($conn, $_POST['contact']);
-            $insert_vendor = "INSERT INTO vendor (contact_name, email, phone_no, role_id) VALUES (?, ?, ?, ?)";
+            $insert_vendor = "INSERT INTO vendor (vendor_id, contact_name, email, phone_no, role_id) VALUES (?, ?, ?, ?, ?)";
             $stmt_vendor = mysqli_prepare($conn, $insert_vendor);
-            mysqli_stmt_bind_param($stmt_vendor, "ssss", $user_name, $user_email, $vendor_contact, $role_id);
+            mysqli_stmt_bind_param($stmt_vendor, "isssi", $user_id, $user_name, $user_email, $vendor_contact, $role_id);
             mysqli_stmt_execute($stmt_vendor);
             mysqli_stmt_close($stmt_vendor);
         } else if ($role_id == 3) {

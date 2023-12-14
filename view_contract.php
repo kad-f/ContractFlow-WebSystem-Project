@@ -1,464 +1,505 @@
-<?php
-include('./database/config.php');
-session_start();
-if (isset($_SESSION['logged']) != "true") {
-    header("Location: login.php");
-    die();
-}
+    <?php
+    // Include necessary files and check session
+    include('./database/config.php');
+    include('update_notifications.php');
 
-include('update_notifications.php');
+    if (isset($_SESSION['logged']) != "true") {
+        header("Location: login.php");
+        die();
+    }
 
-// Get the category ID from the query parameter in the URL
-$category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+    $roleID = $_SESSION['role_id'];
+    ?>
 
-if (!$category_id) {
-    header("Location: index.php");
-    exit();
-}
-?>
+    <!DOCTYPE html>
+    <html lang="en">
 
-<!DOCTYPE html>
-<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>ContractFlow</title>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contract Details</title>
-    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
-    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.css"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.print.min.css"></script>
-
-    <!-- ... (your existing scripts) -->
+        <script src="node_modules/jquery/dist/jquery.min.js"></script>
+        <!-- CSS for full calender -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
+        <!-- JS for jQuery -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+        <!-- JS for full calender -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 20px;
-            background-color: #f5f5f5;
-            text-decoration: none;
-        }
+        <!-- bootstrap css and js -->
 
-        .contract-card {
-            max-width: 90%;
-            margin: 0 auto;
-            background-color: yellow;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-top: 20px;
-            overflow-x: auto;
-            /* Added for horizontal scrolling if needed */
-        }
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                margin: 20px;
+                background-color: #f5f5f5;
+                text-decoration: none;
+            }
 
-        .contract-field {
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-        }
-
-        h2 {
-            color: #333;
-            text-align: center;
-            font-size: 1.5em;
-            /* Adjusted for responsiveness */
-        }
-
-        .contract-field strong {
-            display: block;
-            font-size: 1.2em;
-            /* Adjusted for responsiveness */
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        .contract-field strong {
-            display: block;
-            font-size: 16px;
-            color: #333;
-            margin-bottom: 5px;
-        }
-
-        #calendar {
-            flex: 0 0 48%;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            margin-bottom: 20px;
-        }
-
-        .Complete {
-            background-color: yellowgreen;
-            /* Adjust the color based on your needs */
-        }
-
-        .Delayed {
-            background-color: orange;
-        }
-
-        .NotDelivered {
-            background-color: red;
-        }
-
-        .Expired {
-            background-color: black;
-        }
-
-        .default {
-            background-color: gray;
-            /* Default color for other statuses */
-        }
-
-        @media only screen and (max-width: 600px) {
             .contract-card {
                 max-width: 100%;
-                /* Adjusted for smaller screens */
+                margin: 0 auto;
+                background-color: yellow;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-top: 20px;
+                overflow-x: auto;
+                /* Added for horizontal scrolling if needed */
+            }
+
+            .contract-field {
+                margin-bottom: 15px;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
             }
 
             h2 {
-                font-size: 1.2em;
-                /* Adjusted for smaller screens */
+                color: #333;
+                text-align: center;
+                font-size: 1.5em;
+                /* Adjusted for responsiveness */
             }
 
             .contract-field strong {
-                font-size: 1em;
-                /* Adjusted for smaller screens */
+                display: block;
+                font-size: 1.2em;
+                /* Adjusted for responsiveness */
+                color: #333;
+                margin-bottom: 5px;
             }
-        }
-    </style>
-</head>
 
-<body>
-    <div class="contract-card">
-        <h2>Contract Details</h2>
-        <br>
-        <?php
-        // Get the category ID from the query parameter in the URL
-        $category_id = isset($_GET['category_id']) ? $_GET['category_id'] : null;
+            .contract-field strong {
+                display: block;
+                font-size: 16px;
+                color: #333;
+                margin-bottom: 5px;
+            }
 
-        if (!$category_id) {
-            header("Location: index.php");
-            exit();
-        }
 
-        function getStatusColor($status)
-        {
-            $statusColors = [
-                'Delivered' => 'yellowgreen',
-                'Delayed' => 'orange',
-                'Not Delivered' => 'red',
-                'Expired' => 'black',
-                'default' => 'gray', // Default color for other statuses
-            ];
 
-            return $statusColors[$status] ?? $statusColors['default'];
-        }
-        // Check the user's role
-        $role_id = isset($_SESSION['role_id']) ? $_SESSION['role_id'] : null;
-        $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
-        if ($role_id == 1 || $role_id == 3) {
-            // Admin can see all contracts
-            $sql = "SELECT * FROM contract 
-                    LEFT JOIN type ON contract.type_id = type.type_id
-                    LEFT JOIN category ON contract.category_id = category.category_id
-                    LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
-                    LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
-                    LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
-                    LEFT JOIN payment_type ON contract.payment_type = payment_type.payment_type_id
-                    WHERE contract.category_id = '$category_id'";
-        } else if ($role_id == 2) {
-            $vendor_id = $_SESSION['id'];
-            $sql = "SELECT * FROM contract 
-            LEFT JOIN type ON contract.type_id = type.type_id
-            LEFT JOIN category ON contract.category_id = category.category_id
-            LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
-            LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
-            LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
-            LEFT JOIN payment_type ON contract.payment_type = payment_type.payment_type_id
-            WHERE contract.vendor_id = '$vendor_id' AND contract.category_id = '$category_id'";
-        }
+            .modal-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
 
-        $result = $conn->query($sql);
+            .modal {
+                display: none;
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
 
-        if ($result === false) {
-            die("Error in SQL query: " . $conn->error);
-        }
+            }
 
-        $statusColors = [
-            'Complete' => 'green',
-            'Delayed' => 'orange',
-            'Not Delivered' => 'red',
-            'Expired' => 'black',
-            'default' => '', // Default color for other statuses
-        ];
+            .modal-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+            }
 
-        $events = []; // Initialize the $events array
+            .calendar {
+                flex: 0 0 48%;
+                border: 1px solid #ddd;
+                border-radius: 10px;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+                padding: 20px;
+                margin-bottom: 20px;
+            }
+        </style>
+        <title>View Contract</title>
+    </head>
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                $startAgreement = $row['created_at'];
-                $endAgreement = $row['date']; // Use 'expiration_date' instead of 'expiration_id'
-                $status = $row['status'];
+    <body>
 
-                // Convert the date strings to ISO8601 format with explicit time format
-                $isoStartDate = date('Y-m-d H:i A', strtotime($startAgreement));
-                $isoEndDate = date('Y-m-d H:i A', strtotime($endAgreement));
+        <div class="page-wrap">
+            <div class="contract-card">
+                <?php
+                $role_id = isset($_SESSION['role_id']) ? $_SESSION['role_id'] : null;
+                $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
 
-                // Event for date_of_agreement with color based on status
-                $events[] = [
-                    'title' => 'Created Date',
-                    'start' => $isoStartDate,
-                    'className' => $status,
-                ];
+                // Check user's role and permissions
 
-                // Event for expiration_date with color based on status
-                $events[] = [
-                    'title' => 'Expiration Date',
-                    'start' => $isoEndDate,
-                    'className' => $status,
-                ];
-                $contractNumber = $row['contract_no'];
-        ?>
+                if ($role_id == 1 || $role_id == 3) {
+                    // Admin can see all contracts
+                    $sql = "SELECT contract.*, expiration.date as expiration_date, vendor.contact_name, COALESCE(service_delivery_manager.name, '') as sdm_name, notice_period.date as notice_start_date
+    FROM contract
+    LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
+    LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
+    LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
+    LEFT JOIN notice_period ON contract.contract_no = notice_period.contract_no";
+                } else if ($role_id == 2) {
+                    // Vendor can see only their contracts
+                    $vendor_id = $_SESSION['id'];
+                    $sql = "SELECT contract.*, expiration.date as expiration_date, vendor.contact_name, COALESCE(service_delivery_manager.name, '') as sdm_name, notice_period.date as notice_start_date
+    FROM contract
+    LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id   
+    LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
+    LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
+    LEFT JOIN notice_period ON contract.contract_no = notice_period.contract_no
+    WHERE contract.vendor_id = '$vendor_id'";
+                }
 
-                <div class="contract-field">
-                    <strong>Contract No:</strong>
-                    <?php echo $row['contract_no']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Type:</strong>
-                    <?php echo $row['type']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Category:</strong>
-                    <?php echo $row['category']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Description:</strong>
-                    <?php echo $row['description']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Date of Agreement:</strong>
-                    <?php echo $row['date_of_agreement']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Supplier Name:</strong>
-                    <?php echo $row['contact_name']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Life of Contract:</strong>
-                    <?php echo $row['life_of_contract']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>SDM:</strong>
-                    <?php echo $row['name']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>SDM Remarks:</strong>
-                    <?php echo $row['sdm_remarks']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Annual Spend:</strong>
-                    <?php echo $row['annual_spend']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Payment Type:</strong>
-                    <?php echo $row['payment_name']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Payment Terms:</strong>
-                    <?php echo $row['payment_terms']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Status:</strong>
-                    <?php echo $row['status']; ?>
-                </div>
-                <div class="contract-field">
-                    <strong>Expiration Date:</strong>
-                    <?php echo $row['date']; ?>
-                </div>
 
-                <div class="modal fade" id="eventFormModal" tabindex="-1" role="dialog" aria-labelledby="eventFormModalLabel">
-                    <div class="modal-dialog" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" aria-label="Close" onclick="closeEventFormModal()">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
 
-                                <h4 class="modal-title" id="eventFormModalLabel">Update Contract Status</h4>
-                            </div>
-                            <div class="modal-body">
-                                <!-- Event Form -->
-                                <form method="post" action="update_status.php" id="eventForm_<?php echo $contractNumber; ?>" a>
-                                    <div class="form-group">
-                                        <label for="status">Select Status:</label>
-                                        <select class="form-control" id="status" name="status" required>
-                                            <option value="Complete">Complete</option>
-                                            <option value="Delivered">Delivered</option>
-                                            <option value="Delayed">Delayed</option>
-                                            <option value="Not Delivered">Not Delivered</option>
-                                            <option value="Expired">Expired</option>
-                                        </select>
+                $result = $conn->query($sql);
+
+                if ($result === false) {
+                    die("Error in SQL query: " . $conn->error);
+                }
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        echo "<pre>";
+                        var_dump($row); // Print the contents of $row
+                        echo "</pre>";
+                        echo "<script>display_events('" . $row['contract_no'] . "', '" . $row['expiration_date'] . "', '" . $row['date_of_agreement'] . "', '" . $row['notice_start_date'] . "');</script>";
+
+
+                ?>
+                        <div class="contract-field">
+                            <strong>Contract Name:</strong>
+                            <?php echo $row['contract_name']; ?>
+                            <button class="btn btn-primary" data-toggle="modal" data-target="#contractDetailsModal_<?php echo $row['contract_no']; ?>">
+                                View
+                            </button>
+
+                        </div>
+                        <!-- Contract Details Modal -->
+                        <div class="modal fade" id="contractDetailsModal_<?php echo $row['contract_no']; ?>" tabindex="-1" role="dialog" aria-labelledby="contractDetailsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header text-dark" style="background-color: yellow;">
+                                        <h5 class="modal-title" id="contractDetailsModalLabel">Contract Details</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
-                                    <input type="hidden" id="contractId_<?php echo $contractNumber; ?>" name="contractId" value="<?php echo $contractNumber; ?>">
-                                    <br>
-                                    <button type="submit" class="btn btn-primary" onclick="updateContractStatus()">Update Status</button>
-                                </form>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <strong>Contract No:</strong> <?php echo $row['contract_no']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Contract Name:</strong> <?php echo $row['contract_name']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Description:</strong> <?php echo $row['description']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Date of Agreement:</strong> <?php echo $row['date_of_agreement']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Supplier Name:</strong> <?php echo $row['supplier_name']; ?>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <strong>Life of Contract:</strong> <?php echo $row['life_of_contract']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Client Name:</strong> <?php echo $row['contact_name']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>SDM Name:</strong> <?php echo $row['sdm_name']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Annual Spend:</strong> <?php echo $row['annual_spend']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Payment Type:</strong> <?php echo $row['payment_type']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Payment Terms:</strong> <?php echo $row['payment_terms']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Status:</strong> <?php echo $row['status']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Expiration Date:</strong> <?php echo $row['expiration_date']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Created At:</strong> <?php echo $row['created_at']; ?>
+                                                </div>
+                                            </div>
+                                            <div id="calendar_<?php echo $row['contract_no']; ?>" class="calendar-container" data-contract_no="<?php echo $row['contract_no']; ?>">
+                                                <div class="calendar"></div>
+                                            </div>
+                                        </div>
+                                        <button type="button" class="btn text-dark" style="background-color: yellow;" onclick="openEventCalendar('<?php echo $row['contract_no']; ?>', '<?php echo $row['date_of_agreement']; ?>', '<?php echo $row['expiration_date']; ?>')">View Progress</button>
+
+                                        <!-- Start popup dialog box -->
+                                        <div class="modal fade" id="event_entry_modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                                            <div class="modal-dialog modal-md" role="document">
+                                                <div class="modal-content">
+                                                    <div class="modal-header" style="background-color: yellow;">
+                                                        <h5 class="modal-title" id="modalLabel">Update Progress</h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="img-container">
+                                                            <form id="event_form_<?php echo $row['contract_no']; ?>" method="post" action="save_event.php">
+                                                                <div class="row">
+                                                                    <div class="col-sm-12">
+                                                                        <div class="form-group">
+                                                                            <label for="event_name">Event Name:</label>
+                                                                            <select class="form-control" name="event_name" id="event_name">
+                                                                                <option value="on-time">On Time</option>
+                                                                                <option value="missed">Missed</option>
+                                                                                <option value="delayed">Delayed</option>
+                                                                            </select>
+                                                                            <input type="hidden" name="contract_no" id="contract_no" value="<?php echo $row['contract_no']; ?>">
+
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label for="event_start_date">Date start</label>
+                                                                            <input type="date" name="event_start_date" id="event_start_date" class="form-control onlydatepicker" placeholder="Event start date">
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label for="event_end_date">Date end</label>
+                                                                            <input type="date" name="event_end_date" id="event_end_date" class="form-control" placeholder="Event end date">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn text-dark" style="background-color: yellow;">Save Event</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn text-dark" style="background-color: yellow;" data-toggle="modal" data-target="#event_entry_modal">Add Event</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-            <?php
-            }
-        } else {
-            echo "<div class='no-contract-message'>No contracts available in this category.</div>";
-        }
 
-            ?>
+                <?php
+                    }
+                }
+                ?>
+                <script>
+                    function save_event() {
+                        var contract_no = $("#contract_no").val();
+                        document.getElementById('event_form_' + contract_no).submit();
+                    }
+                </script>
+            </div>
 
-                </div>
-                <div id="calendar"></div>
-    </div>
+        </div>
+
+    </body>
+
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
 
+
     <script>
+        $contractNo = $_GET['contract_no'];
         $(document).ready(function() {
-            var statusColors = <?php echo json_encode($statusColors); ?>;
-            var calendarInitialized = false;
+            $('.calendar-container').each(function() {
+                var contractNo = $(this).data('contract_no');
+                display_events(contractNo);
+            });
+        });
 
+        function getEventColor(eventName) {
+            return {
+                'on-time': 'yellowgreen',
+                'missed': 'darkred',
+                'delayed': 'orange'
+            } [eventName] || 'blue';
+        }
 
-            function getStatusColor(status) {
-                return statusColors[status] || statusColors['default'];
-            }
+        function display_events(contractNo, dateOfAgreement, expirationDate, noticeStartDate) {
+            var calendarId = '#calendar_' + contractNo;
+            $(calendarId + ' .calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                defaultView: 'month',
+                defaultDate: new Date(),
+                height: 'auto',
+                contentHeight: '300px',
+                eventLimit: true,
+                eventLimitText: 'more',
+                eventLimitClick: 'popover',
+                events: function(start, end, timezone, callback) {
+                    $.ajax({
+                        url: 'display_event.php',
+                        type: 'GET',
+                        data: {
+                            contract_no: contractNo
+                        },
+                        success: function(events) {
+                            var parsedEvents = JSON.parse(events);
+                            var formattedEvents = [];
 
-            function openEventForm() {
-                var contractId = 'contract_no';
+                            parsedEvents.forEach(function(event) {
+                                // Customize how events are rendered
+                                var formattedEvent = {
+                                    title: event.title,
+                                    start: event.start,
+                                    end: event.end,
+                                    color: getEventColor(event.event_name),
+                                };
 
-                // Log the contractId to the console for debugging
-                console.log('Contract ID:', contractId);
-                var contractId = 'contract_no';
-                $('#contractId').val(contractId);
-                $('#eventFormModal').modal('show');
+                                formattedEvents.push(formattedEvent);
+                            });
 
-            }
+                            // Add an event for the expiration date
+                            formattedEvents.push({
+                                title: 'Expiration Date',
+                                start: expirationDate,
+                                color: 'red'
+                            });
+                            // Add an event for the date_of_agreement
+                            formattedEvents.push({
+                                title: 'Date of Agreement',
+                                start: dateOfAgreement,
+                                color: 'green'
+                            });
 
-
-            function closeEventFormModal() {
-                $('#eventFormModal').modal('hide');
-            }
-
-            function updateContractStatus() {
-                var status = $('#status').val();
-                var contractId = $('#contractId').val();
-
-                $.ajax({
-                    url: 'update_status.php',
-                    type: 'POST',
-                    data: {
-                        contractId: contractId,
-                        status: status,
-                        remarks: remarks
-                    },
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            // Update the calendar with the new status
-                            updateCalendarStatus(contractId, status);
-                            // Close the modal after updating
-                            $('#eventFormModal').modal('hide');
-                        } else {
-                            // Handle the error (you may show an alert or log it to the console)
-                            console.error('Error updating status:', response.error);
+                            // Add an event for the notice_date
+                            formattedEvents.push({
+                                title: 'Notice Start Date',
+                                start: noticeStartDate,
+                                color: 'yellow'
+                            });
+                            callback(formattedEvents);
+                        },
+                        error: function(error) {
+                            console.error('Error fetching events:', error);
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        // Handle the AJAX error (you may show an alert or log it to the console)
-                        console.error('AJAX Error:', error);
-                    }
-                });
-            }
+                    });
+                },
 
-            // Function to update the calendar with the new status
-            function updateCalendarStatus(contractId, status) {
-                var eventClassName = getStatusColor(status);
-                var calendarEvent = {
-                    'title': 'Updated Status',
-                    'start': moment().format('Y-MM-DD H:mm A'), // Update with the current date and time
-                    'className': eventClassName
-                };
-                $('#calendar').fullCalendar('renderEvent', calendarEvent);
-            }
+                dayRender: function(date, cell) {
+                    var formattedDate = moment(date).format('YYYY-MM-DD');
+                }
+            });
+        }
 
-            if (!calendarInitialized) {
-                $('#calendar').fullCalendar({
-                    header: {
-                        left: 'month, agendaWeek, agendaDay, list',
-                        center: 'title',
-                        right: 'prev, today, next , openEventFormButton',
-                    },
-                    buttonText: {
-                        today: 'Today',
-                        month: 'Month',
-                        week: 'Week',
-                        day: 'Day',
-                        list: 'List',
-                    },
-                    events: <?php echo json_encode($events); ?>,
-                    eventRender: function(event, element) {
-                        element.css('background-color', getStatusColor(event.className));
-                        element.attr('title', event.description);
-                    },
-                    dayRender: function(date, cell) {
-                        var dateString = date.format('YYYY-MM-DD');
-                        var createdDateEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
-                            return event.title === 'Created Date' && event.start.format('YYYY-MM-DD') === dateString;
-                        });
-                        var expirationDateEvents = $('#calendar').fullCalendar('clientEvents', function(event) {
-                            return event.title === 'Expiration Date' && event.start.format('YYYY-MM-DD') === dateString;
-                        });
 
-                        if (expirationDateEvents.length > 0) {
-                            cell.html("<strong>Expiration Date: </strong>" + expirationDateEvents[0].className);
-                        } else if (createdDateEvents.length > 0) {
-                            cell.html("<strong>Created Date: </strong>" + createdDateEvents[0].className);
-                        } else {
-                            cell.html("<strong>No events</strong>");
+
+
+
+        function openEventEntryModal() {
+            $('#event_entry_modal').modal('show');
+        }
+
+        function openEventCalendar(contractNo, dateOfAgreement, expirationDate, noticeStartDate) {
+            var calendarId = '#calendar_' + contractNo;
+
+            $(calendarId + ' .calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                events: function(start, end, timezone, callback) {
+                    $.ajax({
+                        url: 'display_event.php',
+                        type: 'GET',
+                        data: {
+                            contract_no: contractNo
+                        },
+                        success: function(events) {
+                            var parsedEvents = JSON.parse(events);
+
+                            // Customize how events are rendered
+                            var formattedEvents = parsedEvents.map(function(event) {
+                                return {
+                                    title: event.title,
+                                    start: event.start,
+                                    end: event.end,
+                                    color: getEventColor(event.title),
+                                };
+                            });
+
+                            // Add an event for the expiration date
+                            formattedEvents.push({
+                                title: 'Expiration Date',
+                                start: expirationDate,
+                                color: 'red'
+                            });
+                            // Add an event for the date_of_agreement
+                            formattedEvents.push({
+                                title: 'Date of Agreement',
+                                start: dateOfAgreement,
+                                color: 'green'
+                            });
+
+                            // Add an event for the notice_date
+                            formattedEvents.push({
+                                title: 'Notice Start Date',
+                                start: noticeStartDate,
+                                color: 'yellow'
+                            });
+
+                            callback(formattedEvents);
+                        },
+                        error: function(error) {
+                            console.error('Error fetching events:', error);
                         }
+                    });
+                },
+                dayRender: function(date, cell) {
+                    var formattedDate = moment(date).format('YYYY-MM-DD');
+                    // You can customize the rendering of each day cell if needed
+                },
+                eventRender: function(event, element) {
 
-                        // Set background color based on status
-                        if (expirationDateEvents.length > 0 && cell.css('background-color') !== 'red') {
-                            cell.css('background-color', 'red');
-                        } else if (createdDateEvents.length > 0) {
-                            cell.css('background-color', statusColors[createdDateEvents[0].className]);
-                        } else {
-                            cell.css('background-color', statusColors['default']);
-                        }
-                    },
-                    timeFormat: 'h:mm A',
-                    customButtons: {
-                        openEventFormButton: {
-                            text: 'Open Event Form',
-                            click: function() {
-                                openEventForm();
-                            }
-                        }
-                    },
-                });
+                },
+                defaultDate: dateOfAgreement,
+            });
 
-                calendarInitialized = true;
+            $('#eventCalendarModal').modal('show');
+        }
+
+
+        $(document).ready(function() {
+            if (typeof $.fn.fullCalendar !== 'undefined') {
+                $('#calendar').fullCalendar();
+            } else {
+                console.error('FullCalendar not loaded.');
             }
         });
     </script>
 
 
-</body>
-
-</html>
+    </html>

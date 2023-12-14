@@ -31,7 +31,7 @@ include('update_notifications.php');
                 </li>
                 <li>
                     <label for="datepicker">Date of Purchase</label>
-                    <input type="text" name="date" id="datepicker">
+                    <input type="date" name="date" id="datepicker">
                 </li>
                 <li>
                     <label for="life">Expected Lifespan (Years)</label>
@@ -165,7 +165,7 @@ include('update_notifications.php');
             <ul class="form-flex-outer">
                 <li>
                     <label for="e-datepicker">Expiration Date</label>
-                    <input type="text" name="expiration_date" id="e-datepicker">
+                    <input type="date" name="expiration_date" id="e-datepicker">
                 </li>
             </ul>
         </fieldset>
@@ -174,7 +174,7 @@ include('update_notifications.php');
             <legend>Renewal Provision</legend>
             <ul class="form-flex-outer">
                 <li>
-                    <input type="text" name="assignment_provision">
+                    <input type="hidden" name="assignment_provision">
                 </li>
                 <li>
                     <label for="renewal_provisions">Renewal Provisions</label>
@@ -198,7 +198,6 @@ include('update_notifications.php');
                         <option value="Friday">Friday</option>
                         <option value="Saturday">Saturday</option>
                         <option value="Sunday">Sunday</option>
-                        <!-- Add more options as needed -->
                     </select>
                 </li>
                 <li>
@@ -327,8 +326,7 @@ if (isset($_POST['create_contract'])) {
     //Text data variables
     $contract_name = mysqli_real_escape_string($conn, $_POST['contract_name']);
     $description = mysqli_real_escape_string($conn, $_POST['description']);
-    $dateArray = explode('/', $_POST['date']);
-    $date = $dateArray[2] . '-' . $dateArray[0] . '-' . $dateArray[1];
+   $date = mysqli_real_escape_string($conn, $_POST['date']);
     $life = mysqli_real_escape_string($conn, $_POST['life']);
     $supplier = mysqli_real_escape_string($conn, $_POST['supplier']);
     $payment_type = mysqli_real_escape_string($conn, $_POST['payment_type']);
@@ -361,7 +359,7 @@ if (isset($_POST['create_contract'])) {
         // Insert into renewal_provision
         $insert_renewal_provision = "INSERT INTO renewal_provision(contract_no, renewal_provision, initial_term, renewal_periods, notice_day, renewal_date, renewal_conditions) VALUES ('$reference_num', '$renewal_provision', '$initial_term_text', '$renewal_periods_text', '$notice_day_text', '$renewal_date_text', '$renewal_conditions_text')";
         mysqli_query($conn, $insert_renewal_provision);
-        
+
         $renewal_provision_id = mysqli_insert_id($conn);
         // Insert expiration details
         $insert_expiration = "INSERT INTO expiration(contract_no, date, renewal_provision_id, termination_rights, renewal_provision, notified) VALUES ('$reference_num', '$expiration_date', '$renewal_provision_id', '$termination_provision', '$assignment_provision', 0)";
@@ -382,6 +380,8 @@ if (isset($_POST['create_contract'])) {
             $spend_text = mysqli_real_escape_string($conn, $_POST['spend']);
             $status_text = mysqli_real_escape_string($conn, $_POST['status']);
 
+           
+
             // Insert into payment_terms
             $insert_payment_terms = "INSERT INTO payment_type(contract_no, payment_name, payment_terms, payment_schedule, payment_date, payment_description, annual_spend, status) VALUES ('$reference_num', '$payment_type_text', '$payment_terms', '$payment_schedule_text', '$payment_date_text', '$payment_description_text', '$spend_text', '$status_text')";
             mysqli_query($conn, $insert_payment_terms);
@@ -389,22 +389,22 @@ if (isset($_POST['create_contract'])) {
             // Text data variables for renewal_provision
 
             // Insert expiration details
-            $insert_expiration = "INSERT INTO expiration(contract_no, date, renewal_provision_id, termination_rights, renewal_provision, notified) VALUES ('$reference_num', '$expiration_date', ''$renewal_provision_id', '$termination_provision', '$assignment_provision', 0)";
+            $insert_expiration = "INSERT INTO expiration(contract_no, date, renewal_provision_id, termination_rights, renewal_provision, notified) VALUES ('$reference_num', '$expiration_date', '$renewal_provision_id', '$termination_provision', '$assignment_provision', 0)";
             mysqli_query($conn, $insert_expiration);
             $expiration_id = mysqli_insert_id($conn);
 
             // Text data variables for termination_rights
-            $termination_notice_days_text = mysqli_real_escape_string($conn, $_POST['termination_notice_days']);
+
             $termination_notice_day_text = mysqli_real_escape_string($conn, $_POST['termination_notice_day']);
             $termination_date_text = mysqli_real_escape_string($conn, $_POST['termination_date']);
             $termination_conditions_text = mysqli_real_escape_string($conn, $_POST['termination_conditions']);
 
             // Insert into termination_rights
-            $insert_termination_rights = "INSERT INTO termination_rights(termination_provisions, contract_no, termination_notice_days, termination_notice_day, termination_date, termination_conditions) VALUES ('$termination_provision ','$reference_num', '$termination_notice_days_text', '$termination_notice_day_text', '$termination_date_text', '$termination_conditions_text')";
+            $insert_termination_rights = "INSERT INTO termination_rights(termination_provisions, contract_no, termination_notice_day, termination_date, termination_conditions) VALUES ('$termination_provision ','$reference_num',  '$termination_notice_day_text', '$termination_date_text', '$termination_conditions_text')";
+            mysqli_query($conn, $insert_termination_rights);
+
             $add_notification = "Insert into notification(contract_no,status, notification_text) values('$reference_num',0,'Contract $reference_num Added ')";
             mysqli_query($conn, $add_notification);
-
-            mysqli_query($conn, $insert_termination_rights);
             echo "<script>alert('Contract successfully created!');</script>";
             echo "<script>window.open('index.php?new_contract','_self')</script>";
         }

@@ -33,7 +33,7 @@ if (isset($_SESSION['logged']) != "true") {
                     </li>
                     <li>
                         <label for="datepicker">Review Date</label>
-                        <input type="text" name="review_date" id="datepicker">
+                        <input type="date" name="review_date" id="datepicker">
                     </li>
                     <li>
                         <label for="comments">Comments</label>
@@ -55,8 +55,7 @@ if (isset($_SESSION['logged']) != "true") {
 if (isset($_POST['add_notice'])) {
     $contract_num = mysqli_real_escape_string($conn, $_POST['contract-num']);
     $reviewer = mysqli_real_escape_string($conn, $_POST['reviewer']);
-    $reviewDateArray = explode('/', $_POST['review_date']);
-    $review_date = $reviewDateArray[2] . '-' . $reviewDateArray[0] . '-' . $reviewDateArray[1];
+    $review_date = mysqli_real_escape_string($conn, $_POST['review_date']);
     $comments = mysqli_real_escape_string($conn, $_POST['comments']);
 
     // Check if the contract number exists

@@ -115,9 +115,6 @@ $roleID = $_SESSION['role_id'];
 								echo $i;
 							}
 
-
-
-
 							?>
 
 
@@ -128,6 +125,7 @@ $roleID = $_SESSION['role_id'];
 						</span></a>
 					<ul>
 						<li><a href="index.php?view_all_expiration">Expiration</a></li>
+						<li><a href="index.php?view_all_renewal">Renewal</a></li>
 						<li><a href="index.php?view_all_notices">Notice Period</a></li>
 					</ul>
 				</li>
@@ -229,6 +227,9 @@ $roleID = $_SESSION['role_id'];
 			}
 			if (isset($_GET['add_review'])) {
 				include("add_review.php");
+			}
+			if (isset($_GET['view_all_renewal'])) {
+				include("view_all_renewal.php");
 			}
 			if (isset($_GET['view_all_reviews'])) {
 				include("view_all_reviews.php");

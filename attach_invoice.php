@@ -40,7 +40,7 @@ error_reporting(E_ALL);
 
                      <li>
                         <label for="datepicker">Invoice Date</label>
-                        <input type="text" name="invoice_date" id="datepicker">
+                        <input type="date" name="invoice_date" id="datepicker">
                     </li>
                     <li>
         
@@ -64,8 +64,8 @@ error_reporting(E_ALL);
         $file = $_FILES['file']['name'];
         $temp_name = $_FILES['file']['tmp_name'];
         $amount = $_POST['amount'];
-        $invoiceDateArray = explode('/', $_POST['invoice_date']);
-        $invoice_date = $invoiceDateArray[2].'-'.$invoiceDateArray[0].'-'.$invoiceDateArray[1];
+     
+        $invoice_date = $_POST['invoice_date'];
         move_uploaded_file($temp_name,"invoice/$file");
 
 

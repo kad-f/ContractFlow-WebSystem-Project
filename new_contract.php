@@ -16,7 +16,7 @@
                 <legend>Contract Details</legend>
                 <ul class="form-flex-outer">
                     <li>
-                        <label for="reference-num">Purchase Order Number</label>
+                        <label for="reference-num">Contract Number</label>
                         <input type="text" id="reference-num" name="reference-num" value="<?php echo strtoupper(uniqid()); ?>" placeholder="Enter contract reference number here">
                     </li>
                     <li>

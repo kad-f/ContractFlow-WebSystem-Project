@@ -24,9 +24,9 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
         <!-- JS for jQuery -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-       
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-     
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 
@@ -187,7 +187,7 @@
                                 <span style="font-size: 20px;"><i> <?php echo $row['contract_name']; ?></i></span>
                             </p>
 
-                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#contractDetailsModal_<?php echo $row['contract_no']; ?>">
+                            <button class="btn w-100 text-white" data-toggle="modal" style="background-color: #333;" data-target="#contractDetailsModal_<?php echo $row['contract_no']; ?>">
                                 View
                             </button>
 
@@ -263,7 +263,7 @@
                                         <div id="calendar_<?php echo $row['contract_no']; ?>" class="calendar-container" data-contract_no="<?php echo $row['contract_no']; ?>">
                                             <div class="calendar"></div>
                                         </div>
-                                    <button type="button" class="btn text-dark" style="background-color: yellow;" onclick="openEventCalendar(
+                                        <button type="button" class="btn text-white" style="background-color: #333;" onclick="openEventCalendar(
                                         '<?php echo $row['contract_no']; ?>', 
                                         '<?php echo $row['date_of_agreement']; ?>', 
                                         '<?php echo $row['expiration_date']; ?>', 
@@ -291,13 +291,8 @@
                                                                     <div class="col-sm-12">
                                                                         <div class="form-group">
                                                                             <label for="event_name">Event Name:</label>
-                                                                            <select class="form-control" name="event_name" id="event_name">
-                                                                                <option value="on-time">On Time</option>
-                                                                                <option value="missed">Missed</option>
-                                                                                <option value="delayed">Delayed</option>
-                                                                            </select>
+                                                                            <input type="text" name="event_name" class="form-control" placeholder="Event Name" id="event_name">
                                                                             <input type="hidden" name="contract_no" id="contract_no" value="<?php echo $row['contract_no']; ?>">
-
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -308,15 +303,9 @@
                                                                             <input type="date" name="event_start_date" id="event_start_date" class="form-control onlydatepicker" placeholder="Event start date">
                                                                         </div>
                                                                     </div>
-                                                                    <div class="col-sm-6">
-                                                                        <div class="form-group">
-                                                                            <label for="event_end_date">Date end</label>
-                                                                            <input type="date" name="event_end_date" id="event_end_date" class="form-control" placeholder="Event end date">
-                                                                        </div>
-                                                                    </div>
                                                                 </div>
                                                                 <div class="modal-footer">
-                                                                    <button type="submit" class="btn text-dark" style="background-color: yellow;">Save Event</button>
+                                                                    <button type="submit" class="btn text-white" style="background-color: #333;">Save</button>
                                                                 </div>
                                                             </form>
                                                         </div>
@@ -329,7 +318,7 @@
                                     </div>
 
                                     <div class="modal-footer">
-                                        <button type="button" class="btn text-dark" style="background-color: yellow;" data-toggle="modal" data-target="#event_entry_modal">Add Event</button>
+                                        <button type="button" class="btn text-white" style="background-color: #333;" data-toggle="modal" data-target="#event_entry_modal">Add Event</button>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                     </div>
                                 </div>
@@ -365,11 +354,7 @@
         });
 
         function getEventColor(eventName) {
-            return {
-                'on-time': 'yellowgreen',
-                'missed': 'darkred',
-                'delayed': 'orange'
-            } [eventName] || 'blue';
+            return {} [eventName] || 'yellow';
         }
 
         function display_events(contractNo, dateOfAgreement, expirationDate, noticeStartDate, terminationDate, renewalDate, paymentDate) {

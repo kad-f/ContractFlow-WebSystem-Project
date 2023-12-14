@@ -79,9 +79,7 @@ $roleID = $_SESSION['role_id'];
 	<main class="cd-main-content">
 		<nav class="cd-side-nav">
 			<ul>
-
 				<li class="cd-label">Main</li>
-
 				<li class="has-children overview">
 					<?php if ($roleID == 1 || $roleID == 3) : ?>
 						<a href="#0">Manage Contracts</a>
@@ -129,13 +127,12 @@ $roleID = $_SESSION['role_id'];
 
 						</span></a>
 					<ul>
-						<li><a href="">Expiration</a></li>
+						<li><a href="index.php?view_all_expiration">Expiration</a></li>
 						<li><a href="index.php?view_all_notices">Notice Period</a></li>
 					</ul>
 				</li>
 				<li class="has-children comments">
 					<a href="#0">Reviewer Comments</a>
-
 					<ul>
 						<li><a href="index.php?add_review">Add Review</a></li>
 						<li><a href="index.php?view_all_reviews">All Reviews</a></li>
@@ -144,7 +141,6 @@ $roleID = $_SESSION['role_id'];
 
 				<li class="has-children comments">
 					<a href="#0">Notice Periods</a>
-
 					<ul>
 						<?php if ($roleID == 1 || $roleID == 3) : ?>
 							<li><a href="index.php?add_notice_period">Add Notice Period</a></li>
@@ -157,16 +153,16 @@ $roleID = $_SESSION['role_id'];
 				</li>
 				<li class="cd-label">User Management</li>
 				<li class="has-children bookmarks">
-					<a href="#0">Users</a>
+					<a href="#0">Client</a>
 					<ul>
-						<?php if ($roleID == 1 || $roleID == 3) : ?>
-							<li><a href="index.php?view_all_users">View All Users</a></li>
+						<?php if ($roleID == 1) : ?>
+							<li><a href="index.php?view_all_users">View All Client</a></li>
 						<?php endif; ?>
 						<?php if ($roleID == 1) : ?>
-							<li><a href="index.php?add_user">Add User</a></li>
+							<li><a href="index.php?add_user">Add Client</a></li>
 						<?php endif; ?>
 						<?php if ($roleID == 2) : ?>
-							<li><a href="index.php?view_all_users">View All Users</a></li>
+							<li><a href="index.php?view_all_users">View All Client</a></li>
 						<?php endif; ?>
 					</ul>
 				</li>
@@ -175,7 +171,6 @@ $roleID = $_SESSION['role_id'];
 					<a href="#0">Issues</a>
 					<ul>
 						<li><a href="index.php?view_all_issues">All Issues</a></li>
-						<li><a href="#0">Settle Issues</a></li>
 					</ul>
 				</li>
 			</ul>
@@ -189,9 +184,6 @@ $roleID = $_SESSION['role_id'];
 				<?php endif; ?>
 				<li class="has-children images">
 					<a href="index.php?invoice_details">Invoice Details</a>
-				</li>
-				<li class="has-children users">
-					<a href="#0">Generate Report</a>
 				</li>
 			</ul>
 
@@ -216,6 +208,9 @@ $roleID = $_SESSION['role_id'];
 			}
 			if (isset($_GET['view_all_notices'])) {
 				include("view_all_notices.php");
+			}
+			if (isset($_GET['view_all_expiration'])) {
+				include("view_all_expiration.php");
 			}
 			if (isset($_GET['view_all_vendor'])) {
 				include("view_all_vendor.php");

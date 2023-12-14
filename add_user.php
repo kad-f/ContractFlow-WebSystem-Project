@@ -16,8 +16,8 @@
                     <label for="role_id">Role:</label>
                     <select id="role_id" name="role_id" required>
                         <option value="">Select Role</option>
+                        <option value="1">Admin</option>
                         <option value="2">Vendor</option>
-                        <option value="3">Service Delivery Manager</option>
                     </select>
                 </li>
                 <li>
@@ -46,7 +46,7 @@ if (isset($_POST['add_user'])) {
     $role_id = $_POST['role_id'];
 
     // Set default password based on role
-    $default_password = $role_id == 2 ? "vendor123" : "sdm123";
+    $default_password = $role_id == 2 ? "vendor123" : "admin123";
 
     $insert_user = "INSERT INTO users (name, email, password, role_id) VALUES (?, ?, ?, ?)";
     $stmt_user = mysqli_prepare($conn, $insert_user);
@@ -66,16 +66,14 @@ if (isset($_POST['add_user'])) {
             mysqli_stmt_bind_param($stmt_vendor, "isssi", $user_id, $user_name, $user_email, $vendor_contact, $role_id);
             mysqli_stmt_execute($stmt_vendor);
             mysqli_stmt_close($stmt_vendor);
-        } else if ($role_id == 3) {
+        } else if ($role_id == 1) {
             // Insert into service_delivery_manager 
-            $sdm_contact = mysqli_real_escape_string($conn, $_POST['contact']);
-            $insert_sdm = "INSERT INTO service_delivery_manager (name, email, phone_no, role_id) VALUES (?,?,?,?)";
-            $stmt_sdm = mysqli_prepare($conn, $insert_sdm);
-            mysqli_stmt_bind_param($stmt_sdm, "ssss", $user_name, $user_email, $sdm_contact, $role_id);
-            mysqli_stmt_execute($stmt_sdm);
-            mysqli_stmt_close($stmt_sdm);
+            $insert_user = "INSERT INTO users (name, email, password, role_id) VALUES (?, ?, ?, ?)";
+            $stmt_user = mysqli_prepare($conn, $insert_user);
+            // Use $default_password directly instead of $hashed_password
+            mysqli_stmt_bind_param($stmt_user, "sssi", $user_name, $user_email, $default_password, $role_id);
         }
-        $user_type = $role_id == 2 ? "Vendor" : "Service Delivery Manager";
+        $user_type = $role_id == 2 ? "Vendor" : "Admin";
         $insert_view_all_users = "INSERT INTO view_all_users (id, name, email, contact_phone, role_id, type) VALUES (?, ?, ?, ?, ?, ?)";
         $stmt_view_all_users = mysqli_prepare($conn, $insert_view_all_users);
         mysqli_stmt_bind_param($stmt_view_all_users, "isssis", $user_id, $user_name, $user_email, $vendor_contact, $role_id, $user_type);

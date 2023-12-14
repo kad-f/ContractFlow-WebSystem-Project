@@ -24,10 +24,9 @@
         <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
         <!-- JS for jQuery -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-        <!-- JS for full calender -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
+       
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+     
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 
@@ -138,22 +137,38 @@
 
                 if ($role_id == 1 || $role_id == 3) {
                     // Admin can see all contracts
-                    $sql = "SELECT contract.*, expiration.date as expiration_date, vendor.contact_name, COALESCE(service_delivery_manager.name, '') as sdm_name, notice_period.date as notice_start_date
-    FROM contract
-    LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
-    LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
-    LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
-    LEFT JOIN notice_period ON contract.contract_no = notice_period.contract_no";
+                    $sql = "SELECT contract.*, 
+                    expiration.date as expiration_date, 
+                    vendor.contact_name, 
+                    notice_period.date as notice_start_date,
+                    termination_rights.termination_date,
+                    renewal_provision.renewal_date,
+                    payment_type.payment_date
+                        FROM contract
+                        LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
+                        LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
+                        LEFT JOIN notice_period ON contract.contract_no = notice_period.contract_no
+                        LEFT JOIN termination_rights ON contract.contract_no = termination_rights.contract_no
+                        LEFT JOIN renewal_provision ON contract.contract_no = renewal_provision.contract_no
+                        LEFT JOIN payment_type ON contract.contract_no = payment_type.contract_no";
                 } else if ($role_id == 2) {
-                    // Vendor can see only their contracts
+                    // Client can see only their contracts
                     $vendor_id = $_SESSION['id'];
-                    $sql = "SELECT contract.*, expiration.date as expiration_date, vendor.contact_name, COALESCE(service_delivery_manager.name, '') as sdm_name, notice_period.date as notice_start_date
-    FROM contract
-    LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id   
-    LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
-    LEFT JOIN service_delivery_manager ON contract.sdm_id = service_delivery_manager.sdm_id
-    LEFT JOIN notice_period ON contract.contract_no = notice_period.contract_no
-    WHERE contract.vendor_id = '$vendor_id'";
+                    $sql = "SELECT contract.*, 
+               expiration.date as expiration_date, 
+               vendor.contact_name,  
+               notice_period.date as notice_start_date,
+               termination_rights.termination_date,
+               renewal_provision.renewal_date,
+               payment_type.payment_date
+                FROM contract
+                LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id   
+                LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
+                LEFT JOIN notice_period ON contract.contract_no = notice_period.contract_no
+                LEFT JOIN termination_rights ON contract.contract_no = termination_rights.contract_no
+                LEFT JOIN renewal_provision ON contract.contract_no = renewal_provision.contract_no
+                LEFT JOIN payment_type ON contract.contract_no = payment_type.contract_no
+                WHERE contract.vendor_id = '$vendor_id'";
                 }
 
 
@@ -166,17 +181,15 @@
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo "<pre>";
-                        var_dump($row); // Print the contents of $row
-                        echo "</pre>";
-                        echo "<script>display_events('" . $row['contract_no'] . "', '" . $row['expiration_date'] . "', '" . $row['date_of_agreement'] . "', '" . $row['notice_start_date'] . "');</script>";
-
+                        echo "<script>display_events('" . $row['contract_no'] . "', '" . $row['expiration_date'] . "', '" . $row['date_of_agreement'] . "', '" . $row['notice_start_date'] . "', '" . $row['termination_date'] . "' , '" . $row['renewal_date'] . "' , '" . $row['payment_date'] . "');</script>";
 
                 ?>
                         <div class="contract-field">
-                            <strong>Contract Name:</strong>
-                            <?php echo $row['contract_name']; ?>
-                            <button class="btn btn-primary" data-toggle="modal" data-target="#contractDetailsModal_<?php echo $row['contract_no']; ?>">
+                            <p style="font-size: 30px;">Contract Name:
+                                <span style="font-size: 20px;"><i> <?php echo $row['contract_name']; ?></i></span>
+                            </p>
+
+                            <button class="btn btn-primary w-100" data-toggle="modal" data-target="#contractDetailsModal_<?php echo $row['contract_no']; ?>">
                                 View
                             </button>
 
@@ -193,7 +206,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
                                                     <strong>Contract No:</strong> <?php echo $row['contract_no']; ?>
                                                 </div>
@@ -210,15 +223,12 @@
                                                     <strong>Supplier Name:</strong> <?php echo $row['supplier_name']; ?>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-12">
                                                 <div class="form-group">
                                                     <strong>Life of Contract:</strong> <?php echo $row['life_of_contract']; ?>
                                                 </div>
                                                 <div class="form-group">
                                                     <strong>Client Name:</strong> <?php echo $row['contact_name']; ?>
-                                                </div>
-                                                <div class="form-group">
-                                                    <strong>SDM Name:</strong> <?php echo $row['sdm_name']; ?>
                                                 </div>
                                                 <div class="form-group">
                                                     <strong>Annual Spend:</strong> <?php echo $row['annual_spend']; ?>
@@ -235,15 +245,36 @@
                                                 <div class="form-group">
                                                     <strong>Expiration Date:</strong> <?php echo $row['expiration_date']; ?>
                                                 </div>
+
                                                 <div class="form-group">
                                                     <strong>Created At:</strong> <?php echo $row['created_at']; ?>
                                                 </div>
+                                                <div class="form-group">
+                                                    <strong>Termination Date:</strong> <?php echo $row['termination_date']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Renewal Date:</strong> <?php echo $row['renewal_date']; ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Payment Date:</strong> <?php echo $row['payment_date']; ?>
+                                                </div>
+
                                             </div>
-                                            <div id="calendar_<?php echo $row['contract_no']; ?>" class="calendar-container" data-contract_no="<?php echo $row['contract_no']; ?>">
-                                                <div class="calendar"></div>
-                                            </div>
+
                                         </div>
-                                        <button type="button" class="btn text-dark" style="background-color: yellow;" onclick="openEventCalendar('<?php echo $row['contract_no']; ?>', '<?php echo $row['date_of_agreement']; ?>', '<?php echo $row['expiration_date']; ?>')">View Progress</button>
+                                        <div id="calendar_<?php echo $row['contract_no']; ?>" class="calendar-container" data-contract_no="<?php echo $row['contract_no']; ?>">
+                                            <div class="calendar"></div>
+                                        </div>
+                                    <button type="button" class="btn text-dark" style="background-color: yellow;" onclick="openEventCalendar(
+                                        '<?php echo $row['contract_no']; ?>', 
+                                        '<?php echo $row['date_of_agreement']; ?>', 
+                                        '<?php echo $row['expiration_date']; ?>', 
+                                        '<?php echo $row['notice_start_date']; ?>', 
+                                        '<?php echo $row['termination_date']; ?>', 
+                                        '<?php echo $row['renewal_date']; ?>', 
+                                        '<?php echo $row['payment_date']; ?>'
+                                    )">View Progress</button>
+
 
                                         <!-- Start popup dialog box -->
                                         <div class="modal fade" id="event_entry_modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
@@ -343,7 +374,7 @@
             } [eventName] || 'blue';
         }
 
-        function display_events(contractNo, dateOfAgreement, expirationDate, noticeStartDate) {
+        function display_events(contractNo, dateOfAgreement, expirationDate, noticeStartDate, terminationDate, renewalDate, paymentDate) {
             var calendarId = '#calendar_' + contractNo;
             $(calendarId + ' .calendar').fullCalendar({
                 header: {
@@ -383,7 +414,7 @@
 
                             // Add an event for the expiration date
                             formattedEvents.push({
-                                title: 'Expiration Date',
+                                title: 'Contract Expiration',
                                 start: expirationDate,
                                 color: 'red'
                             });
@@ -396,10 +427,29 @@
 
                             // Add an event for the notice_date
                             formattedEvents.push({
-                                title: 'Notice Start Date',
+                                title: 'Notice For Contract',
                                 start: noticeStartDate,
                                 color: 'yellow'
                             });
+
+                            formattedEvents.push({
+                                title: 'Contract Renewal',
+                                start: renewalDate,
+                                color: 'purple'
+                            });
+
+                            formattedEvents.push({
+                                title: 'Contract Termination',
+                                start: terminationDate,
+                                color: 'red'
+                            });
+
+                            formattedEvents.push({
+                                title: 'Contract Payment Due Date',
+                                start: paymentDate,
+                                color: 'skyblue'
+                            });
+
                             callback(formattedEvents);
                         },
                         error: function(error) {
@@ -422,7 +472,7 @@
             $('#event_entry_modal').modal('show');
         }
 
-        function openEventCalendar(contractNo, dateOfAgreement, expirationDate, noticeStartDate) {
+        function openEventCalendar(contractNo, dateOfAgreement, expirationDate, noticeStartDate, terminationDate, renewalDate, paymentDate) {
             var calendarId = '#calendar_' + contractNo;
 
             $(calendarId + ' .calendar').fullCalendar({
@@ -453,7 +503,7 @@
 
                             // Add an event for the expiration date
                             formattedEvents.push({
-                                title: 'Expiration Date',
+                                title: 'Contract Expiration',
                                 start: expirationDate,
                                 color: 'red'
                             });
@@ -466,9 +516,25 @@
 
                             // Add an event for the notice_date
                             formattedEvents.push({
-                                title: 'Notice Start Date',
+                                title: 'Notice For Contract',
                                 start: noticeStartDate,
-                                color: 'yellow'
+                                color: 'pink'
+                            });
+
+                            formattedEvents.push({
+                                title: 'Contract Renewal',
+                                start: renewalDate,
+                                color: 'purple'
+                            });
+                            formattedEvents.push({
+                                title: 'Contract Termination',
+                                start: terminationDate,
+                                color: 'red'
+                            });
+                            formattedEvents.push({
+                                title: 'Contract Payment Due Date',
+                                start: paymentDate,
+                                color: 'skyblue'
                             });
 
                             callback(formattedEvents);

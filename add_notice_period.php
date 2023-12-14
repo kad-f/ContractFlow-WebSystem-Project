@@ -17,7 +17,7 @@ if (isset($_SESSION['logged']) != true) {
                 </li>
                 <li>
                     <label for="datepicker">Notice Date</label>
-                    <input type="text" name="notice_date" id="datepicker">
+                    <input type="date" name="notice_date" id="datepicker">
                 </li>
                 <li>
                     <label for="notice_description">Notice Description</label>
@@ -35,8 +35,7 @@ if (isset($_SESSION['logged']) != true) {
 <?php
 if (isset($_POST['add_notice'])) {
     $contract_num = mysqli_real_escape_string($conn, $_POST['contract-num']);
-    $noticeDateArray = explode('/', $_POST['notice_date']);
-    $notice_date = $noticeDateArray[2] . '-' . $noticeDateArray[0] . '-' . $noticeDateArray[1];
+   $notice_date = mysqli_real_escape_string($conn, $_POST['notice_date']);
     $notice_description = mysqli_real_escape_string($conn, $_POST['notice_description']);
 
     $insert_notice = "Insert into notice_period(contract_no, date, description) values('$contract_num', '$notice_date', '$notice_description')";

@@ -82,8 +82,6 @@
                 margin-bottom: 5px;
             }
 
-
-
             .modal-header {
                 display: flex;
                 justify-content: space-between;

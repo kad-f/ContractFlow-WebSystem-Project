@@ -52,17 +52,3 @@ This project is licensed under the
 Special thanks to contributors who have dedicated their time and effort to this project.
 Inspiration from similar projects and open-source communities.
 
-
-
- insert into customers(customer_name) values('Alice', 'Bob', 'Tom' 'Jerry', 'John');
-MariaDB [labexam_db]> insert into customers(customer_name) values('Alice'), ('Bob'), ('Tom'), ('Jerry'), ('John');
-MariaDB [labexam_db]> insert into customers(name) values('Alice'), ('Bob'), ('Tom'), ('Jerry'), ('John');
-
- insert into product(product_name, price) values('Keyboard', 120), ('Mouse', 80), ('Screen', 600), ('Hard disk' 450);
-MariaDB [labexam_db]> insert into product(product_name, price) values('Keyboard', 120), ('Mouse', 80), ('Screen', 600);
-
-alter table orders add constraint fk_product_id foreign key(product_id) references product(product_id);
-Query OK, 0 rows affected (0.027 sec)
-Records: 0  Duplicates: 0  Warnings: 0
-
-MariaDB [labexam_db]>  alter table orders add constraint fk_customer_id foreign key(customer_id) references customers(customer_id);

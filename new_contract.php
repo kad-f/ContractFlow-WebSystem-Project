@@ -24,10 +24,14 @@
                         <label for="contract_name">Contract Name</label>
                         <input type="text" name="contract_name" id="contract_name" placeholder="Enter Contract's Name here">
                     </li>
+
+                    <li>
+                        <label for="description">Contract Description</label>
+                        <textarea rows="6" id="description" name="description" placeholder="Enter Contract Description here"></textarea>
                     </li>
                     <li>
-                        <label for="description">Hardware Description</label>
-                        <textarea rows="6" id="description" name="description" placeholder="Enter Hardware Description here"></textarea>
+                        <label for="product_type">Product Type</label>
+                        <input type="text" name="product_type" id="product_type" placeholder="Enter type of computer parts or gadgets">
                     </li>
                     <li>
                         <label for="datepicker">Date of Purchase</label>
@@ -41,6 +45,7 @@
                         <label for="supplier">Name of Supplier</label>
                         <input type="text" name="supplier" id="supplier" placeholder="Enter Supplier's Name here">
                     </li>
+
                 </ul>
             </fieldset>
             <!-- Client Details -->
@@ -64,6 +69,96 @@
                     </li>
                 </ul>
             </fieldset>
+            <!-- Delivery Section -->
+            <fieldset>
+                <legend>Delivery Information</legend>
+                <ul class="form-flex-outer">
+                    <li>
+                        <label for="delivery_terms">Delivery Terms</label>
+                        <textarea name="delivery_terms" id="delivery_terms" cols="30" rows="10"></textarea>
+                    </li>
+                    <li>
+                        <label for="delivery_location">Delivery Location</label>
+                        <input type="text" name="delivery_location" id="delivery_location" placeholder="Enter delivery location">
+                    </li>
+                    <li>
+                        <label for="delivery_date">Delivery Date</label>
+                        <input type="date" name="delivery_date" id="delivery_date">
+                    </li>
+                    <li>
+                        <button type="button" onclick="generateDelivery()">Generate Delivery Terms</button>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <script>
+                function generateDelivery() {
+                    var deliveryLocation = document.getElementById('delivery_location').value;
+                    var deliveryDate = document.getElementById('delivery_date').value;
+                    var deliveryTerms = document.getElementById('delivery_terms').value;
+                    var contractName = document.getElementById('contract_name').value;
+                    var buyerName = document.getElementById('vendor_id').value;
+                    var supplierName = document.getElementById('supplier').value;
+
+                    var deliveryTemplate = "**" + contractName + "**\n\n" +
+                        "This section outlines the delivery terms for the products supplied under the " + contractName + ". Both parties agree to the following terms:\n\n" +
+                        "1. **Delivery Location:** " + deliveryLocation + "\n" +
+                        "2. **Delivery Date:** " + deliveryDate + "\n" +
+                        "3. **Delivery Terms:** " + deliveryTerms + "\n\n" +
+                        "The purpose of this agreement is to ensure the timely and secure delivery of products from " + supplierName + " to " + buyerName + ". Both parties agree to adhere to these delivery terms to facilitate a smooth and efficient delivery process.";
+
+                    // Retain input values
+                    var currentDeliveryTerms = document.getElementById('delivery_terms').value;
+                    document.getElementById('delivery_terms').value = currentDeliveryTerms + deliveryTemplate;
+
+                    // Set input values back
+                    document.getElementById('contract_name').value = contractName;
+                    document.getElementById('vendor_id').value = buyerName;
+                    document.getElementById('supplier').value = supplierName;
+                    document.getElementById('delivery_location').value = deliveryLocation;
+                    document.getElementById('delivery_date').value = deliveryDate;
+                }
+            </script>
+
+            <!-- Warranty Section -->
+            <fieldset>
+                <legend>Warranty Information</legend>
+                <ul class="form-flex-outer">
+                    <li>
+                        <label for="Warranty">Warranty</label>
+                        <textarea name="warranty" id="warranty" rows="6"></textarea>
+                    </li>
+                    <li>
+                        <label for="warranty_duration">Warranty Duration (in months)</label>
+                        <input type="text" name="warranty_duration" id="warranty_duration">
+                    </li>
+                    <li>
+                        <button type="button" onclick="generateWarranty()">Generate Warranty</button>
+                    </li>
+                </ul>
+            </fieldset>
+
+            <script>
+                function generateWarranty() {
+                    var duration = document.getElementById('warranty_duration').value;
+                    var contractName = document.getElementById('contract_name').value;
+                    var buyerName = document.getElementById('vendor_id').value;
+                    var supplierName = document.getElementById('supplier').value;
+
+                    var warrantyTemplate = "Supplier warrants that the Products shall be free from defects in materials and workmanship for a period of " + duration + " months from the date of delivery. Any defects discovered within this period shall be promptly rectified by Supplier at no additional cost to " + buyerName + ".";
+
+                    // Retain input values
+                    var currentWarrantyTerms = document.getElementById('warranty').value;
+                    document.getElementById('warranty').value = currentWarrantyTerms + warrantyTemplate;
+
+                    // Set input values back
+                    document.getElementById('contract_name').value = contractName;
+                    document.getElementById('vendor_id').value = buyerName;
+                    document.getElementById('supplier').value = supplierName;
+                    document.getElementById('warranty_duration').value = duration;
+                }
+            </script>
+
             <fieldset>
                 <legend>Payment Terms</legend>
                 <ul class="form-flex-outer">
@@ -103,52 +198,54 @@
                         <label for="status">Status</label>
                         <input type="text" id="status" name="status" placeholder="Enter status of payment here">
                     </li>
-                    <button type="button" onclick="addPaymentEntry()">Add Payment Entry</button>
-
-                    <script>
-                        function addPaymentEntry() {
-                            var date = document.getElementById('payment_date').value;
-                            var description = document.getElementById('payment_description').value;
-                            var paymentType = document.getElementById('payment_type').value;
-                            var paymentDay = document.getElementById('payment_day').value;
-                            var spend = document.getElementById('spend').value;
-                            var status = document.getElementById('status').value;
-                            var contractName = document.getElementById('contract_name').value;
-                            var buyerName = document.getElementById('vendor_id').value;
-                            var supplierName = document.getElementById('supplier').value;
-                            var dateStart = document.getElementById('datepickerp').value;
-                            var paymentTermsTemplate = "**" + contractName + "**\n\n" +
-                                "This section outlines the agreed-upon terms for financial transactions related to the " + contractName + ", " + buyerName + " and " + supplierName + ". Both parties commit to the following terms:\n\n" +
-                                "1. **Payment Method:** " + paymentType + "\n" +
-                                "2. **Payment Schedule:** [Specify Payment Schedule, e.g., Monthly, Quarterly, Annually]\n" +
-                                "3. **Payment Details:**\n" +
-                                "   - **Payment Day:** " + paymentDay + "\n" +
-                                "   - **Payment Date:** " + date + "\n" +
-                                "   - **Payment Description:** " + description + "\n" +
-                                "4. **Annual Payment Commitment:**₱" + spend + "\n" +
-                                "5. **Status:** " + status + "\n\n" +
-                                "The purpose of this agreement is to establish a clear framework for the timely and secure transfer of funds between the parties in accordance with the terms specified in the broader " + contractName + ".\n\n" +
-                                "Both parties agree to adhere to these financial arrangements to ensure a smooth and transparent transaction process.\n\n" +
-                                "" + dateStart + "";
-
-                            // Retain input values
-                            var currentPaymentTerms = document.getElementById('payment_terms').value;
-                            document.getElementById('payment_terms').value = currentPaymentTerms + paymentTermsTemplate;
-
-                            // Set input values back
-                            document.getElementById('contract_name').value = contractName;
-                            document.getElementById('vendor_id').value = buyerName;
-                            document.getElementById('supplier').value = supplierName;
-                            document.getElementById('datepickerp').value = dateStart;
-                            document.getElementById('payment_date').value = date;
-                            document.getElementById('payment_day').value = paymentDay;
-                            document.getElementById('payment_description').value = description;
-                            document.getElementById('spend').value = spend;
-                            document.getElementById('status').value = status;
-                        }
-                    </script>
-
+                    <li>
+                        <button type="button" onclick="addPaymentEntry()">Add Payment Entry</button>
+                    </li>
                 </ul>
+                <script>
+                    function addPaymentEntry() {
+                        var date = document.getElementById('payment_date').value;
+                        var description = document.getElementById('payment_description').value;
+                        var paymentType = document.getElementById('payment_type').value;
+                        var paymentDay = document.getElementById('payment_day').value;
+                        var spend = document.getElementById('spend').value;
+                        var status = document.getElementById('status').value;
+                        var contractName = document.getElementById('contract_name').value;
+                        var buyerName = document.getElementById('vendor_id').value;
+                        var supplierName = document.getElementById('supplier').value;
+                        var dateStart = document.getElementById('datepickerp').value;
+                        var paymentTermsTemplate = "**" + contractName + "**\n\n" +
+                            "This section outlines the agreed-upon terms for financial transactions related to the " + contractName + ", " + buyerName + " and " + supplierName + ". Both parties commit to the following terms:\n\n" +
+                            "1. **Payment Method:** " + paymentType + "\n" +
+                            "2. **Payment Schedule:** [Specify Payment Schedule, e.g., Monthly, Quarterly, Annually]\n" +
+                            "3. **Payment Details:**\n" +
+                            "   - **Payment Day:** " + paymentDay + "\n" +
+                            "   - **Payment Date:** " + date + "\n" +
+                            "   - **Payment Description:** " + description + "\n" +
+                            "4. **Annual Payment Commitment:**₱" + spend + "\n" +
+                            "5. **Status:** " + status + "\n\n" +
+                            "The purpose of this agreement is to establish a clear framework for the timely and secure transfer of funds between the parties in accordance with the terms specified in the broader " + contractName + ".\n\n" +
+                            "Both parties agree to adhere to these financial arrangements to ensure a smooth and transparent transaction process.\n\n" +
+                            "" + dateStart + "";
+
+                        // Retain input values
+                        var currentPaymentTerms = document.getElementById('payment_terms').value;
+                        document.getElementById('payment_terms').value = currentPaymentTerms + paymentTermsTemplate;
+
+                        // Set input values back
+                        document.getElementById('contract_name').value = contractName;
+                        document.getElementById('vendor_id').value = buyerName;
+                        document.getElementById('supplier').value = supplierName;
+                        document.getElementById('datepickerp').value = dateStart;
+                        document.getElementById('payment_date').value = date;
+                        document.getElementById('payment_day').value = paymentDay;
+                        document.getElementById('payment_description').value = description;
+                        document.getElementById('spend').value = spend;
+                        document.getElementById('status').value = status;
+                    }
+                </script>
+
+
             </fieldset>
 
 
@@ -200,7 +297,9 @@
                         <label for="renewal_conditions">Renewal Conditions</label>
                         <textarea rows="6" name="renewal_conditions" id="renewal_conditions" placeholder="Enter renewal conditions"></textarea>
                     </li>
-                    <button type="button" onclick="generateRenewalProvision()">Generate Renewal Provision</button>
+                    <li>
+                        <button type="button" onclick="generateRenewalProvision()">Generate Renewal Provision</button>
+                    </li>
                 </ul>
                 <script>
                     function generateRenewalProvision() {
@@ -272,34 +371,36 @@
                         <textarea rows="5" name="termination_conditions" id="termination_conditions" placeholder="Enter termination conditions"></textarea>
                     </li>
 
-                    <button type="button" onclick="generateTerminationProvision()">Generate Termination Provision</button>
-
-                    <script>
-                        function generateTerminationProvision() {
-                            var terminationNoticeDay = document.getElementById('termination_notice_day').value;
-                            var terminationDate = document.getElementById('termination_date').value;
-                            var terminationConditions = document.getElementById('termination_conditions').value;
-
-                            var terminationProvision = "Either party may terminate this Agreement by providing written notice of termination " +
-                                "at least " + terminationNoticeDay + " days.\n" +
-                                "Termination Date: " + terminationDate + "\n" +
-                                terminationConditions;
-
-                            var existingContent = document.getElementById('termination_provisions').value;
-
-                            var finalContent = existingContent + '\n\n' + terminationProvision;
-
-                            document.getElementById('termination_provisions').value = finalContent;
-
-                            // Retain input values
-                            document.getElementById('termination_notice_days').value = terminationNoticeDays;
-                            document.getElementById('termination_notice_day').value = terminationNoticeDay;
-                            document.getElementById('termination_date').value = terminationDate;
-                            document.getElementById('termination_conditions').value = terminationConditions;
-                        }
-                    </script>
-
+                    <li>
+                        <button type="button" onclick="generateTerminationProvision()">Generate Termination Provision</button>
+                    </li>
                 </ul>
+                <script>
+                    function generateTerminationProvision() {
+                        var terminationNoticeDay = document.getElementById('termination_notice_day').value;
+                        var terminationDate = document.getElementById('termination_date').value;
+                        var terminationConditions = document.getElementById('termination_conditions').value;
+
+                        var terminationProvision = "Either party may terminate this Agreement by providing written notice of termination " +
+                            "at least " + terminationNoticeDay + " days.\n" +
+                            "Termination Date: " + terminationDate + "\n" +
+                            terminationConditions;
+
+                        var existingContent = document.getElementById('termination_provisions').value;
+
+                        var finalContent = existingContent + '\n\n' + terminationProvision;
+
+                        document.getElementById('termination_provisions').value = finalContent;
+
+                        // Retain input values
+                        document.getElementById('termination_notice_days').value = terminationNoticeDays;
+                        document.getElementById('termination_notice_day').value = terminationNoticeDay;
+                        document.getElementById('termination_date').value = terminationDate;
+                        document.getElementById('termination_conditions').value = terminationConditions;
+                    }
+                </script>
+
+                \
             </fieldset>
 
             <fieldset>
@@ -334,6 +435,10 @@
         $termination_provision = mysqli_real_escape_string($conn, $_POST['termination_provisions']);
         $assignment_provision = mysqli_real_escape_string($conn, $_POST['assignment_provision']);
         $reference_num = mysqli_real_escape_string($conn, $_POST['reference-num']);
+        
+        $productype = mysqli_real_escape_string($conn, $_POST['product_type']);
+        $warranty = mysqli_real_escape_string($conn, $_POST['warranty']);
+        $delivery_terms = mysqli_real_escape_string($conn, $_POST['delivery_terms']);
         $created_at = date('Y-m-d H:i:s');
 
         // Check if the contract already exists in the selected category
@@ -357,12 +462,21 @@
             mysqli_query($conn, $insert_expiration);
             $expiration_id = mysqli_insert_id($conn);
             // Insert contract details
-            $insert_contract = "INSERT INTO contract(contract_no, contract_name, description, date_of_agreement, supplier_name, life_of_contract, vendor_id, annual_spend, payment_type, payment_terms, status, expiration_id, created_at) VALUES ('$reference_num', '$contract_name', '$description', '$date', '$supplier', '$life', '$vendor_id','$spend', '$payment_type', '$terms', '$status', '$expiration_id', '$created_at')";
+            $insert_contract = "INSERT INTO contract(contract_no, contract_name, description, date_of_agreement, supplier_name, product_type, life_of_contract, vendor_id, annual_spend, payment_type, payment_terms, warranty, delivery_terms,  status, expiration_id, created_at) VALUES ('$reference_num', '$contract_name', '$description', '$date', '$supplier', '$productype', '$life', '$vendor_id','$spend', '$payment_type', '$terms', '$warranty', '$delivery_terms', '$status', '$expiration_id', '$created_at')";
             echo $insert_contract;
             $result_contract = mysqli_query($conn, $insert_contract);
 
             if ($result_contract) {
-                // Text data variables for payment_terms
+
+                $delivery_date = mysqli_real_escape_string($conn, $_POST['$delivery_date']);
+                $delivery_loc = mysqli_real_escape_string($conn, $_POST['delivery_location']);
+                $delivery_terms_qry = "INSERT INTO delivery_terms(contract_no, vendor_id, supplier_name, delivery_location, delivery_date, delivery_terms) VALUES('$reference_num', '$vendor_id', '$supplier', '$delivery_loc', '$delivery_date', '$delivery_terms')";
+                mysqli_query($conn, $delivery_terms_qry);
+
+                $warranty_duration = mysqli_real_escape_string($conn, $_POST['warranty_duration']);
+                $warranty_terms_qry = "INSERT INTO warranty_terms(contract_no, vendor_id, supplier_name, warranty_duration, warranty_terms) VALUES('$reference_num', '$vendor_id', '$supplier', '$warranty_duration', '$warranty')";
+                mysqli_query($conn, $warranty_terms_qry);
+                
                 $payment_terms = mysqli_real_escape_string($conn, $_POST['payment_terms']);
                 $payment_type_text = mysqli_real_escape_string($conn, $_POST['payment_type']);
                 $payment_schedule_text = mysqli_real_escape_string($conn, $_POST['payment_day']);
@@ -370,7 +484,7 @@
                 $payment_description_text = mysqli_real_escape_string($conn, $_POST['payment_description']);
                 $spend_text = mysqli_real_escape_string($conn, $_POST['spend']);
                 $status_text = mysqli_real_escape_string($conn, $_POST['status']);
-                // Insert into payment_terms
+             
                 $insert_payment_terms = "INSERT INTO payment_type(contract_no, payment_name, payment_terms, payment_schedule, payment_date, payment_description, annual_spend, status) VALUES ('$reference_num', '$payment_type_text', '$payment_terms', '$payment_schedule_text', '$payment_date_text', '$payment_description_text', '$spend_text', '$status_text')";
                 mysqli_query($conn, $insert_payment_terms);
 

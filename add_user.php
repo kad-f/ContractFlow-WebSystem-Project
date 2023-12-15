@@ -17,7 +17,7 @@
                     <select id="role_id" name="role_id" required>
                         <option value="">Select Role</option>
                         <option value="1">Admin</option>
-                        <option value="2">Vendor</option>
+                        <option value="2">Client</option>
                     </select>
                 </li>
                 <li>

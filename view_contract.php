@@ -17,19 +17,13 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>ContractFlow</title>
-
         <script src="node_modules/jquery/dist/jquery.min.js"></script>
         <!-- CSS for full calender -->
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
         <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css" rel="stylesheet" />
-        <!-- JS for jQuery -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.min.js"></script>
-
         <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.js"></script>
-
         <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
-
         <!-- bootstrap css and js -->
 
         <style>
@@ -141,14 +135,16 @@
                     notice_period.date as notice_start_date,
                     termination_rights.termination_date,
                     renewal_provision.renewal_date,
-                    payment_type.payment_date
+                    payment_type.payment_date,
+                    delivery_terms.delivery_date
                         FROM contract
                         LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id
                         LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
                         LEFT JOIN notice_period ON contract.contract_no = notice_period.contract_no
                         LEFT JOIN termination_rights ON contract.contract_no = termination_rights.contract_no
                         LEFT JOIN renewal_provision ON contract.contract_no = renewal_provision.contract_no
-                        LEFT JOIN payment_type ON contract.contract_no = payment_type.contract_no";
+                        LEFT JOIN payment_type ON contract.contract_no = payment_type.contract_no
+                        LEFT JOIN delivery_terms ON contract.contract_no = delivery_terms.contract_no";
                 } else if ($role_id == 2) {
                     // Client can see only their contracts
                     $vendor_id = $_SESSION['id'];
@@ -158,7 +154,8 @@
                notice_period.date as notice_start_date,
                termination_rights.termination_date,
                renewal_provision.renewal_date,
-               payment_type.payment_date
+               payment_type.payment_date,
+                    delivery_terms.delivery_date
                 FROM contract
                 LEFT JOIN expiration ON contract.expiration_id = expiration.expiration_id   
                 LEFT JOIN vendor ON contract.vendor_id = vendor.vendor_id
@@ -166,6 +163,7 @@
                 LEFT JOIN termination_rights ON contract.contract_no = termination_rights.contract_no
                 LEFT JOIN renewal_provision ON contract.contract_no = renewal_provision.contract_no
                 LEFT JOIN payment_type ON contract.contract_no = payment_type.contract_no
+                  LEFT JOIN delivery_terms ON contract.contract_no = delivery_terms.contract_no
                 WHERE contract.vendor_id = '$vendor_id'";
                 }
 
@@ -179,7 +177,7 @@
 
                 if ($result->num_rows > 0) {
                     while ($row = $result->fetch_assoc()) {
-                        echo "<script>display_events('" . $row['contract_no'] . "', '" . $row['expiration_date'] . "', '" . $row['date_of_agreement'] . "', '" . $row['notice_start_date'] . "', '" . $row['termination_date'] . "' , '" . $row['renewal_date'] . "' , '" . $row['payment_date'] . "');</script>";
+                        echo "<script>display_events('" . $row['contract_no'] . "', '" . $row['expiration_date'] . "', '" . $row['date_of_agreement'] . "', '" . $row['notice_start_date'] . "', '" . $row['termination_date'] . "' , '" . $row['renewal_date'] . "' , '" . $row['payment_date'] . "' , '" . $row['delivery_date'] . "');</script>";
 
                 ?>
                         <div class="contract-field">
@@ -232,7 +230,10 @@
                                                     <strong>Annual Spend:</strong> <?php echo $row['annual_spend']; ?>
                                                 </div>
                                                 <div class="form-group">
-                                                    <strong>Payment Type:</strong> <?php echo $row['payment_type']; ?>
+                                                    <strong>Warranty</strong> <?php echo $row['warranty'] ?>
+                                                </div>
+                                                <div class="form-group">
+                                                    <strong>Delivery Terms</strong> <?php echo $row['delivery_terms'] ?>
                                                 </div>
                                                 <div class="form-group">
                                                     <strong>Payment Terms:</strong> <?php echo $row['payment_terms']; ?>
@@ -270,7 +271,8 @@
                                         '<?php echo $row['notice_start_date']; ?>', 
                                         '<?php echo $row['termination_date']; ?>', 
                                         '<?php echo $row['renewal_date']; ?>', 
-                                        '<?php echo $row['payment_date']; ?>'
+                                        '<?php echo $row['payment_date']; ?>',
+                                        '<?php echo $row['delivery_date']; ?>'
                                     )">View Progress</button>
 
 
@@ -303,6 +305,16 @@
                                                                             <input type="date" name="event_start_date" id="event_start_date" class="form-control onlydatepicker" placeholder="Event start date">
                                                                         </div>
                                                                     </div>
+
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-sm-6">
+                                                                        <div class="form-group">
+                                                                            <label for="event_end_date">Date End</label>
+                                                                            <input type="date" name="event_end_date" id="event_end_date" class="form-control onlydatepicker" placeholder="Event end date">
+                                                                        </div>
+                                                                    </div>
+
                                                                 </div>
                                                                 <div class="modal-footer">
                                                                     <button type="submit" class="btn text-white" style="background-color: #333;">Save</button>
@@ -357,7 +369,7 @@
             return {} [eventName] || 'yellow';
         }
 
-        function display_events(contractNo, dateOfAgreement, expirationDate, noticeStartDate, terminationDate, renewalDate, paymentDate) {
+        function display_events(contractNo, dateOfAgreement, expirationDate, noticeStartDate, terminationDate, renewalDate, paymentDate, deliveryDate) {
             var calendarId = '#calendar_' + contractNo;
             $(calendarId + ' .calendar').fullCalendar({
                 header: {
@@ -389,7 +401,7 @@
                                     title: event.title,
                                     start: event.start,
                                     end: event.end,
-                                    color: getEventColor(event.event_name),
+                                    color: getEventColor(event.title),
                                 };
 
                                 formattedEvents.push(formattedEvent);
@@ -433,6 +445,12 @@
                                 color: 'skyblue'
                             });
 
+                            formattedEvents.push({
+                                title: 'Delivery Supplies',
+                                start: deliveryDate,
+                                color: 'violet'
+                            });
+
                             callback(formattedEvents);
                         },
                         error: function(error) {
@@ -455,7 +473,7 @@
             $('#event_entry_modal').modal('show');
         }
 
-        function openEventCalendar(contractNo, dateOfAgreement, expirationDate, noticeStartDate, terminationDate, renewalDate, paymentDate) {
+        function openEventCalendar(contractNo, dateOfAgreement, expirationDate, noticeStartDate, terminationDate, renewalDate, paymentDate, deliveryDate) {
             var calendarId = '#calendar_' + contractNo;
 
             $(calendarId + ' .calendar').fullCalendar({
@@ -518,6 +536,11 @@
                                 title: 'Contract Payment Due Date',
                                 start: paymentDate,
                                 color: 'skyblue'
+                            });
+                            formattedEvents.push({
+                                title: 'Delivery Supplies',
+                                start: deliveryDate,
+                                color: 'violet'
                             });
 
                             callback(formattedEvents);
